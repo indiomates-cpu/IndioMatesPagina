@@ -4,6 +4,10 @@
 // el aviso destacado "¡Últimas X unidades!".
 export const UMBRAL_STOCK_BAJO = 2;
 
+// Cantidad de productos que se muestran en el listado antes de necesitar
+// tocar "Ver más".
+export const PRODUCTOS_POR_PAGINA = 12;
+
 // Imagen de reemplazo cuando un producto no tiene imágenes cargadas.
 export const IMAGEN_PLACEHOLDER =
   'https://placehold.co/800x800/0a0a0a/ffffff/png?text=Indio+Mates';

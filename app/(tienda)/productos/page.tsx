@@ -1,5 +1,5 @@
 import type { Metadata } from 'next';
-import { ProductCard } from '@/components/producto/ProductCard';
+import { ProductGrid } from '@/components/catalogo/ProductGrid';
 import { CategoryFilter } from '@/components/catalogo/CategoryFilter';
 import { obtenerCategorias, obtenerProductos } from '@/lib/queries';
 
@@ -42,11 +42,9 @@ export default async function ProductosPage({
           No hay productos en esta categoría por el momento.
         </div>
       ) : (
-        <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4">
-          {productos.map((p, i) => (
-            <ProductCard key={p.id} producto={p} indice={i} />
-          ))}
-        </div>
+        // `key` fuerza a reiniciar el revelado ("Ver más") al cambiar de
+        // categoría, para que cada vista arranque colapsada.
+        <ProductGrid key={categoria ?? 'todos'} productos={productos} />
       )}
     </div>
   );
