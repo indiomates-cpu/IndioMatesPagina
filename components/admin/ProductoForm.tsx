@@ -5,6 +5,7 @@ import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import type { CategoriaDTO, ProductoDTO } from '@/lib/types';
 import { cn } from '@/lib/utils';
+import { calcularDescuentoPorcentaje } from '@/lib/constants';
 
 interface ImagenLocal {
   url: string;
@@ -27,6 +28,9 @@ export function ProductoForm({
   const [descripcion, setDescripcion] = useState(producto?.descripcion ?? '');
   const [precio, setPrecio] = useState(
     producto ? String(producto.precio) : ''
+  );
+  const [precioOriginal, setPrecioOriginal] = useState(
+    producto?.precioOriginal ? String(producto.precioOriginal) : ''
   );
   const [stock, setStock] = useState(producto ? String(producto.stock) : '0');
   const [activo, setActivo] = useState(producto?.activo ?? true);
@@ -113,6 +117,7 @@ export function ProductoForm({
       slug: slug.trim() || undefined,
       descripcion,
       precio: Number(precio),
+      precioOriginal: precioOriginal.trim() ? Number(precioOriginal) : null,
       stock: Number(stock),
       activo,
       categoriaId,
@@ -336,6 +341,35 @@ export function ProductoForm({
             />
           </Campo>
         </div>
+
+        <Campo
+          label="Precio anterior (opcional)"
+          htmlFor="precioOriginal"
+          hint="Cargalo para mostrar el producto tachado con descuento. Dejalo vacío para no aplicar descuento."
+        >
+          <input
+            id="precioOriginal"
+            type="number"
+            min={0}
+            step="0.01"
+            value={precioOriginal}
+            onChange={(e) => setPrecioOriginal(e.target.value)}
+            placeholder="Ej: 15000"
+            className={inputBase}
+          />
+          {(() => {
+            const pct = calcularDescuentoPorcentaje(
+              Number(precio) || 0,
+              precioOriginal.trim() ? Number(precioOriginal) : null
+            );
+            if (pct === null) return null;
+            return (
+              <p className="mt-1.5 text-xs font-medium text-tinta">
+                Se va a mostrar tachado con -{pct}% de descuento.
+              </p>
+            );
+          })()}
+        </Campo>
 
         <label className="flex items-center gap-2.5 text-sm">
           <input

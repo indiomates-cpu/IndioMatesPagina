@@ -26,19 +26,20 @@ model Categoria {
 // PRODUCTO
 // ============================
 model Producto {
-  id            String           @id @default(cuid())
-  nombre        String
-  slug          String           @unique
-  descripcion   String
-  precio        Decimal
-  stock         Int              @default(0)
-  activo        Boolean          @default(true) // visible/oculto en el catálogo
-  categoriaId   String
-  categoria     Categoria        @relation(fields: [categoriaId], references: [id])
-  imagenes      ImagenProducto[]
-  eventos       EventoMetrica[]
-  creadoEn      DateTime         @default(now())
-  actualizadoEn DateTime         @updatedAt
+  id             String           @id @default(cuid())
+  nombre         String
+  slug           String           @unique
+  descripcion    String
+  precio         Decimal
+  precioOriginal Decimal? // precio "antes" del descuento; si es mayor a `precio`, se muestra tachado con el % de descuento
+  stock          Int              @default(0)
+  activo         Boolean          @default(true) // visible/oculto en el catálogo
+  categoriaId    String
+  categoria      Categoria        @relation(fields: [categoriaId], references: [id])
+  imagenes       ImagenProducto[]
+  eventos        EventoMetrica[]
+  creadoEn       DateTime         @default(now())
+  actualizadoEn  DateTime         @updatedAt
 }
 
 // ============================

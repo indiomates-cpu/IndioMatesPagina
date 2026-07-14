@@ -21,6 +21,9 @@ export interface ProductoDTO {
   slug: string;
   descripcion: string;
   precio: number;
+  // Precio "antes" del descuento. Si está presente y es mayor a `precio`,
+  // se muestra tachado junto con el % de descuento.
+  precioOriginal?: number;
   stock: number;
   activo: boolean;
   categoriaId: string;

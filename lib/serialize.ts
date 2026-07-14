@@ -32,6 +32,8 @@ export function serializarProducto(p: ProductoConRelaciones): ProductoDTO {
     descripcion: p.descripcion,
     // Decimal -> number para poder pasarlo a Client Components.
     precio: Number(p.precio),
+    precioOriginal:
+      p.precioOriginal != null ? Number(p.precioOriginal) : undefined,
     stock: p.stock,
     activo: p.activo,
     categoriaId: p.categoriaId,

@@ -2,7 +2,7 @@
 
 // Umbral de "stock bajo": con esta cantidad o menos (y mayor a 0) se muestra
 // el aviso destacado "¡Últimas X unidades!".
-export const UMBRAL_STOCK_BAJO = 5;
+export const UMBRAL_STOCK_BAJO = 2;
 
 // Imagen de reemplazo cuando un producto no tiene imágenes cargadas.
 export const IMAGEN_PLACEHOLDER =
@@ -38,4 +38,14 @@ export function etiquetaStock(stock: number): string {
     default:
       return `Stock: ${stock} unidades`;
   }
+}
+
+// Porcentaje de descuento a mostrar (redondeado). Devuelve null si no hay
+// precio original cargado o si no representa un descuento real.
+export function calcularDescuentoPorcentaje(
+  precio: number,
+  precioOriginal?: number | null
+): number | null {
+  if (!precioOriginal || precioOriginal <= precio) return null;
+  return Math.round(((precioOriginal - precio) / precioOriginal) * 100);
 }

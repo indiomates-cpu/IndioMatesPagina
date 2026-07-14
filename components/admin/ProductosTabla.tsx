@@ -5,7 +5,11 @@ import Image from 'next/image';
 import Link from 'next/link';
 import type { ProductoDTO } from '@/lib/types';
 import { formatearPrecio } from '@/lib/utils';
-import { IMAGEN_PLACEHOLDER, calcularEstadoStock } from '@/lib/constants';
+import {
+  IMAGEN_PLACEHOLDER,
+  calcularEstadoStock,
+  calcularDescuentoPorcentaje,
+} from '@/lib/constants';
 import { cn } from '@/lib/utils';
 
 export function ProductosTabla({ inicial }: { inicial: ProductoDTO[] }) {
@@ -150,7 +154,22 @@ export function ProductosTabla({ inicial }: { inicial: ProductoDTO[] }) {
                     </div>
                   </td>
                   <td className="p-3 tabular-nums">
-                    {formatearPrecio(p.precio)}
+                    <div className="flex items-center gap-2">
+                      <span>{formatearPrecio(p.precio)}</span>
+                      {calcularDescuentoPorcentaje(
+                        p.precio,
+                        p.precioOriginal
+                      ) !== null && (
+                        <span className="rounded-full bg-tinta px-1.5 py-0.5 text-[10px] font-semibold text-papel">
+                          -
+                          {calcularDescuentoPorcentaje(
+                            p.precio,
+                            p.precioOriginal
+                          )}
+                          %
+                        </span>
+                      )}
+                    </div>
                   </td>
                   <td className="p-3">
                     <div className="flex items-center gap-1.5">

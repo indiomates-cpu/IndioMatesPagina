@@ -6,10 +6,11 @@ import Link from 'next/link';
 import { AnimatePresence, motion } from 'framer-motion';
 import type { ProductoDTO } from '@/lib/types';
 import { formatearPrecio } from '@/lib/utils';
-import { IMAGEN_PLACEHOLDER } from '@/lib/constants';
+import { IMAGEN_PLACEHOLDER, calcularDescuentoPorcentaje } from '@/lib/constants';
 import { useCarrito } from '@/store/cart';
 import { EASE_PREMIUM } from '@/lib/motion';
 import { StockBadge } from './StockBadge';
+import { DiscountBadge } from './DiscountBadge';
 
 export function ProductCard({
   producto,
@@ -28,6 +29,10 @@ export function ProductCard({
 
   const portada = producto.imagenes[0]?.url ?? IMAGEN_PLACEHOLDER;
   const sinStock = producto.stock <= 0;
+  const descuento = calcularDescuentoPorcentaje(
+    producto.precio,
+    producto.precioOriginal
+  );
 
   function agregarAlCarrito(e: React.MouseEvent) {
     e.preventDefault();
@@ -68,6 +73,11 @@ export function ProductCard({
           <div className="absolute left-3 top-3">
             <StockBadge stock={producto.stock} />
           </div>
+          {descuento !== null && (
+            <div className="absolute right-3 top-3">
+              <DiscountBadge porcentaje={descuento} />
+            </div>
+          )}
         </div>
       </Link>
 
@@ -84,9 +94,16 @@ export function ProductCard({
         </Link>
 
         <div className="mt-auto flex items-end justify-between pt-3">
-          <span className="font-display text-lg font-bold">
-            {formatearPrecio(producto.precio)}
-          </span>
+          <div className="flex flex-col">
+            {descuento !== null && (
+              <span className="text-xs text-tinta/40 line-through">
+                {formatearPrecio(producto.precioOriginal!)}
+              </span>
+            )}
+            <span className="font-display text-lg font-bold">
+              {formatearPrecio(producto.precio)}
+            </span>
+          </div>
           <motion.button
             onClick={agregarAlCarrito}
             disabled={sinStock}

@@ -4,9 +4,11 @@ import { notFound } from 'next/navigation';
 import { ProductGallery } from '@/components/producto/ProductGallery';
 import { AddToCartSection } from '@/components/producto/AddToCartSection';
 import { StockBadge } from '@/components/producto/StockBadge';
+import { DiscountBadge } from '@/components/producto/DiscountBadge';
 import { RegistrarVista } from '@/components/producto/RegistrarVista';
 import { obtenerProductoPorSlug } from '@/lib/queries';
 import { formatearPrecio } from '@/lib/utils';
+import { calcularDescuentoPorcentaje } from '@/lib/constants';
 
 export async function generateMetadata({
   params,
@@ -31,6 +33,11 @@ export default async function ProductoDetallePage({
   const producto = await obtenerProductoPorSlug(slug);
 
   if (!producto) notFound();
+
+  const descuento = calcularDescuentoPorcentaje(
+    producto.precio,
+    producto.precioOriginal
+  );
 
   return (
     <div className="mx-auto max-w-6xl px-4 py-8 sm:px-6">
@@ -79,10 +86,16 @@ export default async function ProductoDetallePage({
             {producto.nombre}
           </h1>
 
-          <div className="mt-4 flex items-center gap-4">
+          <div className="mt-4 flex flex-wrap items-center gap-x-4 gap-y-2">
+            {descuento !== null && (
+              <span className="text-base text-tinta/40 line-through">
+                {formatearPrecio(producto.precioOriginal!)}
+              </span>
+            )}
             <span className="font-display text-3xl font-bold">
               {formatearPrecio(producto.precio)}
             </span>
+            {descuento !== null && <DiscountBadge porcentaje={descuento} />}
             <StockBadge stock={producto.stock} />
           </div>
 

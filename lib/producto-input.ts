@@ -11,6 +11,7 @@ export interface DatosProducto {
   slug: string;
   descripcion: string;
   precio: number;
+  precioOriginal: number | null;
   stock: number;
   activo: boolean;
   categoriaId: string;
@@ -35,6 +36,14 @@ export async function parsearBodyProducto(
   const stock = Math.trunc(Number(body.stock));
   const activo = body.activo === undefined ? true : Boolean(body.activo);
 
+  // Precio original (para descuento): opcional. Vacío/0/null -> sin descuento.
+  const precioOriginalRaw = body.precioOriginal;
+  const hayPrecioOriginal =
+    precioOriginalRaw !== undefined &&
+    precioOriginalRaw !== null &&
+    precioOriginalRaw !== '';
+  const precioOriginal = hayPrecioOriginal ? Number(precioOriginalRaw) : null;
+
   if (!nombre) return { error: 'El nombre es obligatorio' };
   if (!descripcion) return { error: 'La descripción es obligatoria' };
   if (!Number.isFinite(precio) || precio < 0) {
@@ -42,6 +51,18 @@ export async function parsearBodyProducto(
   }
   if (!Number.isFinite(stock) || stock < 0) {
     return { error: 'El stock debe ser un número entero mayor o igual a 0' };
+  }
+  if (precioOriginal !== null) {
+    if (!Number.isFinite(precioOriginal) || precioOriginal <= 0) {
+      return {
+        error: 'El precio anterior debe ser un número mayor a 0',
+      };
+    }
+    if (precioOriginal <= precio) {
+      return {
+        error: 'El precio anterior debe ser mayor al precio actual',
+      };
+    }
   }
   if (!categoriaId) return { error: 'La categoría es obligatoria' };
 
@@ -76,6 +97,16 @@ export async function parsearBodyProducto(
     .filter((img) => img.url.length > 0);
 
   return {
-    data: { nombre, slug, descripcion, precio, stock, activo, categoriaId, imagenes },
+    data: {
+      nombre,
+      slug,
+      descripcion,
+      precio,
+      precioOriginal,
+      stock,
+      activo,
+      categoriaId,
+      imagenes,
+    },
   };
 }
