@@ -44,7 +44,7 @@ export function Header({ categorias }: { categorias: CategoriaDTO[] }) {
         >
           <span className="relative flex h-9 w-9 items-center justify-center overflow-hidden rounded-full transition-transform duration-300 ease-premium group-hover:-rotate-6 group-hover:scale-105 group-active:scale-95">
             <Image
-              src="/logo.jpeg"
+              src="/logo.png"
               alt={NOMBRE_NEGOCIO}
               fill
               sizes="36px"

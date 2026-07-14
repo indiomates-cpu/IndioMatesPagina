@@ -13,7 +13,7 @@ export function Hero() {
     <section className="relative overflow-hidden bg-black text-papel">
     
 
-      <div className="relative mx-auto grid max-w-6xl gap-8 px-4 py-16 sm:px-6 md:grid-cols-2 md:items-center md:py-24">
+      <div className="relative mx-auto grid max-w-6xl gap-8 px-4 py-8 sm:px-6 md:grid-cols-2 md:items-center md:py-8">
         <div>
           <motion.span
             initial={{ opacity: 0, y: 10 }}
@@ -93,19 +93,21 @@ export function Hero() {
 
         {/* Logo de marca */}
         <motion.div
-          initial={{ opacity: 0, scale: 1 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ ...RESORTE_SUAVE, delay: 0.25 }}
-          className="relative mx-auto hidden md:block"
+        initial={{ opacity: 0, scale: 0.8 }}
+        animate={{ opacity: 1, scale: 1 }}
+        transition={{ ...RESORTE_SUAVE, delay: 0.25 }}
+        className="relative mx-auto hidden md:block -translate-x-12 -translate-y-10"
         >
+        
           <div className="animate-flotar">
-  <div className="relative flex h-45 w-45 items-center justify-center lg:h-[34rem] lg:w-[34rem]">
+  <div className="relative -translate-x-8 -translate-y-8 flex h-[34rem] w-[34rem] items-center justify-center">
     <div className="relative h-full w-full">
       <Image
-        src="/logo.jpeg"
+        src="/logo.png"
         alt="Indio Mates"
         fill
-        sizes="(max-width:2048px) 800px, 800px"
+        unoptimized
+        sizes="(max-width: 768px) 300px, 600px"
         priority
         className="scale-[1] object-contain"
       />
