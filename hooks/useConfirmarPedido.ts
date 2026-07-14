@@ -27,7 +27,7 @@ export function useConfirmarPedido() {
 
     const total = calcularTotal(items);
     const mensaje = armarMensajePedido(items, total);
-    const link = construirLinkWhatsApp(mensaje);
+    const link = construirLinkWhatsApp(mensaje, { alternar: true });
 
     // IMPORTANTE: abrir WhatsApp de forma SÍNCRONA, dentro del gesto del
     // usuario. Si se hiciera después de un `await`, Safari/iOS bloquean el

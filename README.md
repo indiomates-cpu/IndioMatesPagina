@@ -160,6 +160,13 @@ https://wa.me/<NEXT_PUBLIC_WHATSAPP_NUMBER>?text=<mensaje-codificado>
 Luego se muestra una pantalla de confirmación. Configurá el número real del
 negocio en `NEXT_PUBLIC_WHATSAPP_NUMBER`.
 
+**Repartir pedidos entre dos socios:** si completás también
+`NEXT_PUBLIC_WHATSAPP_NUMBER_2`, cada pedido confirmado se envía al azar
+(50/50) a uno de los dos números, para repartir la carga pareja entre ambos.
+Si dejás esa variable vacía, todos los pedidos van al número principal. El
+contacto general de la página de Soporte siempre usa el número principal
+(no alterna), ya que no es un pedido.
+
 ---
 
 ## 📊 Lógica de stock (catálogo)
