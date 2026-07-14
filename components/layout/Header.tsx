@@ -10,13 +10,12 @@ import {
   useMotionValueEvent,
   useScroll,
 } from 'framer-motion';
-import type { CategoriaDTO } from '@/lib/types';
 import { NOMBRE_NEGOCIO } from '@/lib/constants';
 import { CartIcon } from '@/components/cart/CartIcon';
 import { RESORTE_SUAVE, listaEscalonada, itemLista } from '@/lib/motion';
 import { cn } from '@/lib/utils';
 
-export function Header({ categorias }: { categorias: CategoriaDTO[] }) {
+export function Header() {
   const [menuAbierto, setMenuAbierto] = useState(false);
   const [desplazado, setDesplazado] = useState(false);
   const pathname = usePathname();
@@ -81,19 +80,6 @@ export function Header({ categorias }: { categorias: CategoriaDTO[] }) {
           >
             Productos
           </Link>
-          {/* Categorías: sólo en pantallas grandes para no amontonar la barra. */}
-          {categorias.slice(0, 3).map((c) => (
-            <Link
-              key={c.id}
-              href={`/productos?categoria=${c.slug}`}
-              className={cn(
-                linkDesktop,
-                'hidden text-tinta/70 hover:text-tinta lg:inline-block'
-              )}
-            >
-              {c.nombre}
-            </Link>
-          ))}
           <Link
             href="/quienes-somos"
             data-activo={pathname === '/quienes-somos'}
@@ -188,18 +174,6 @@ export function Header({ categorias }: { categorias: CategoriaDTO[] }) {
                   Todos los productos
                 </Link>
               </motion.div>
-              <motion.div variants={itemLista} className="my-1 h-px bg-tinta/10" />
-              {categorias.map((c) => (
-                <motion.div key={c.id} variants={itemLista}>
-                  <Link
-                    href={`/productos?categoria=${c.slug}`}
-                    onClick={() => setMenuAbierto(false)}
-                    className="presionable block rounded-lg px-3 py-2.5 text-sm text-tinta/70 hover:bg-tinta/5"
-                  >
-                    {c.nombre}
-                  </Link>
-                </motion.div>
-              ))}
               <motion.div variants={itemLista} className="my-1 h-px bg-tinta/10" />
               <motion.div variants={itemLista}>
                 <Link
