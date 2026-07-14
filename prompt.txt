@@ -1,0 +1,95 @@
+You are an expert Senior Frontend Engineer, Motion Designer, and UI/UX Designer specialized in premium mobile applications.
+Project location:
+C:\Users\justi\Indio Mates
+Your first task is NOT to write code.
+1. Explore the entire project.
+2. Read ALL documentation, README files, design guidelines, architecture docs, assets, themes, colors, fonts, and existing components.
+3. Understand the current design system, branding, animations, navigation, and UI patterns.
+4. Reuse existing components whenever possible.
+5. Do NOT introduce colors, typography, or styles that don't belong to the project.
+Only after fully understanding the project, implement the following.
+# OBJECTIVE
+Create a completely redesigned premium loading experience that feels worthy of a high-end application.
+The loading screen must be visually impressive, elegant, fluid, and heavily animated while remaining performant.
+It should immediately communicate craftsmanship, Argentine mate culture, and premium quality.
+# DESIGN GOALS
+The loading screen must include multiple layered animations, not just a logo fade.
+Possible animated elements include:
+• Rotating mate.
+• Floating yerba particles.
+• Steam with realistic movement.
+• Light reflections.
+• Liquid movement.
+• Soft glowing effects.
+• Depth/parallax.
+• Organic motion.
+• Background gradients.
+• Morphing shapes.
+• Smooth logo reveal.
+• Animated typography.
+• Small decorative particles.
+• Premium easing.
+• Blur transitions.
+• Scale transitions.
+• Fade transitions.
+• Opacity choreography.
+Every animation should feel intentional and polished.
+Avoid generic loaders.
+Avoid simple spinners.
+The experience should feel handcrafted.
+# MICROINTERACTIONS
+This is extremely important.
+Every clickable element throughout the application should have premium microinteractions.
+Review the entire application and improve every interaction.
+Examples:
+• Scale animation
+• Ripple
+• Soft bounce
+• Press depth
+• Elevation changes
+• Shadow transitions
+• Hover effects (desktop)
+• Touch feedback
+• Smooth icon transitions
+• Animated borders
+• Animated cards
+• Animated buttons
+• Animated list items
+• Animated navigation
+• Animated tabs
+• Animated menus
+• Animated switches
+• Animated chips
+• Animated dialogs
+• Animated bottom sheets
+Every click should feel satisfying.
+No abrupt state changes.
+Everything should animate naturally.
+# PAGE TRANSITIONS
+Improve navigation transitions across the application.
+Pages should never instantly appear.
+Use premium transitions such as:
+• Fade
+• Slide
+• Shared element transitions
+• Scale
+• Blur
+• Motion choreography
+Navigation should feel smooth and luxurious.
+# PERFORMANCE
+Animations must remain at 60 FPS.
+Use GPU-friendly transforms.
+Avoid unnecessary re-renders.
+Avoid heavy repaint operations.
+Respect reduced motion settings when applicable.
+# CODE QUALITY
+Follow the existing project architecture.
+Do not break any existing functionality.
+Do not duplicate components.
+Refactor only when it improves maintainability.
+Keep animations modular and reusable.
+# FINAL GOAL
+The final result should feel comparable to the polish of applications such as Apple, Airbnb, Stripe, Notion, Arc Browser, Linear, and premium fintech apps.
+The application should feel alive.
+Every interaction should communicate quality.
+Before finishing, review every screen and add any missing animation or polish that improves the overall experience while staying consistent with the project's design language.

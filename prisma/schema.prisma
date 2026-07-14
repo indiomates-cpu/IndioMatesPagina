@@ -1,0 +1,74 @@
+// Schema de Prisma para Indio Mates
+// Docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// ============================
+// CATEGORÍA
+// ============================
+model Categoria {
+  id        String     @id @default(cuid())
+  nombre    String
+  slug      String     @unique
+  orden     Int        @default(0) // orden de visualización en el menú
+  productos Producto[]
+  creadoEn  DateTime   @default(now())
+}
+
+// ============================
+// PRODUCTO
+// ============================
+model Producto {
+  id            String           @id @default(cuid())
+  nombre        String
+  slug          String           @unique
+  descripcion   String
+  precio        Decimal
+  stock         Int              @default(0)
+  activo        Boolean          @default(true) // visible/oculto en el catálogo
+  categoriaId   String
+  categoria     Categoria        @relation(fields: [categoriaId], references: [id])
+  imagenes      ImagenProducto[]
+  eventos       EventoMetrica[]
+  creadoEn      DateTime         @default(now())
+  actualizadoEn DateTime         @updatedAt
+}
+
+// ============================
+// IMAGEN DE PRODUCTO (relación 1:N)
+// ============================
+model ImagenProducto {
+  id         String   @id @default(cuid())
+  url        String
+  orden      Int      @default(0) // 0 = portada
+  productoId String
+  producto   Producto @relation(fields: [productoId], references: [id], onDelete: Cascade)
+}
+
+// ============================
+// ADMINISTRADOR
+// ============================
+model Admin {
+  id             String   @id @default(cuid())
+  usuario        String   @unique
+  contrasenaHash String
+  creadoEn       DateTime @default(now())
+}
+
+// ============================
+// EVENTO DE MÉTRICA (panel propio)
+// ============================
+model EventoMetrica {
+  id         String    @id @default(cuid())
+  tipo       String // ej: "vista_producto", "pedido_whatsapp"
+  productoId String?
+  producto   Producto? @relation(fields: [productoId], references: [id])
+  fecha      DateTime  @default(now())
+}

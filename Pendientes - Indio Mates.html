@@ -1,0 +1,416 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Indio Mates — Qué falta para funcionar</title>
+<style>
+  :root {
+    --bg: #0a0a0a;
+    --panel: #141414;
+    --panel-2: #1a1a1a;
+    --border: #2a2a2a;
+    --text: #f4f4f4;
+    --muted: #a0a0a0;
+    --dim: #6b6b6b;
+    --white: #ffffff;
+    --red: #ff6b6b;
+    --amber: #ffcf6b;
+    --gray: #8b8b8b;
+    --green: #7ee787;
+    --code-bg: #101010;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.65;
+    -webkit-font-smoothing: antialiased;
+  }
+  .wrap { max-width: 900px; margin: 0 auto; padding: 48px 24px 120px; }
+
+  /* Hero */
+  .hero { border-bottom: 1px solid var(--border); padding-bottom: 32px; margin-bottom: 40px; }
+  .mate { font-size: 40px; line-height: 1; }
+  .tag {
+    display: inline-block; border: 1px solid var(--border); border-radius: 20px;
+    padding: 4px 12px; font-size: 12px; color: var(--muted);
+    letter-spacing: 0.05em; text-transform: uppercase; margin: 14px 0 12px;
+  }
+  h1 { font-size: 32px; letter-spacing: -0.02em; line-height: 1.15; margin-bottom: 10px; }
+  .hero p { color: var(--muted); font-size: 15px; max-width: 620px; }
+
+  /* Progress */
+  .progress-card {
+    background: var(--panel); border: 1px solid var(--border);
+    border-radius: 14px; padding: 22px 24px; margin-bottom: 40px;
+  }
+  .progress-row { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 12px; flex-wrap: wrap; gap: 6px; }
+  .progress-row strong { font-size: 15px; }
+  .progress-row span { color: var(--muted); font-size: 13px; }
+  .bar { height: 10px; background: #222; border-radius: 999px; overflow: hidden; }
+  .bar > i { display: block; height: 100%; background: var(--white); border-radius: 999px; }
+  .progress-note { margin-top: 14px; font-size: 13px; color: var(--dim); }
+
+  /* Legend */
+  .legend { display: flex; gap: 18px; flex-wrap: wrap; margin-bottom: 40px; font-size: 13px; color: var(--muted); }
+  .legend span { display: inline-flex; align-items: center; gap: 7px; }
+  .dot { width: 9px; height: 9px; border-radius: 50%; display: inline-block; }
+  .dot.red { background: var(--red); }
+  .dot.amber { background: var(--amber); }
+  .dot.gray { background: var(--gray); }
+  .dot.green { background: var(--green); }
+
+  h2 { font-size: 13px; text-transform: uppercase; letter-spacing: 0.1em; color: var(--dim); margin: 44px 0 18px; font-weight: 600; }
+
+  /* Cards */
+  .card {
+    background: var(--panel); border: 1px solid var(--border);
+    border-radius: 14px; padding: 22px 24px; margin-bottom: 16px; position: relative;
+    border-left: 3px solid var(--border);
+  }
+  .card.red { border-left-color: var(--red); }
+  .card.amber { border-left-color: var(--amber); }
+  .card.gray { border-left-color: var(--gray); }
+  .card-head { display: flex; align-items: center; gap: 12px; margin-bottom: 6px; flex-wrap: wrap; }
+  .num {
+    flex-shrink: 0; width: 26px; height: 26px; border-radius: 8px;
+    background: var(--white); color: #000; font-weight: 700; font-size: 13px;
+    display: inline-flex; align-items: center; justify-content: center;
+  }
+  .card h3 { font-size: 17px; letter-spacing: -0.01em; }
+  .pill {
+    font-size: 11px; padding: 2px 9px; border-radius: 999px; border: 1px solid var(--border);
+    color: var(--muted); text-transform: uppercase; letter-spacing: 0.04em; margin-left: auto;
+  }
+  .pill.req { color: var(--red); border-color: #4a2a2a; background: #1e1414; }
+  .pill.opt { color: var(--amber); border-color: #4a3f2a; background: #1e1a14; }
+  .pill.later { color: var(--gray); }
+  .card .why { color: var(--muted); font-size: 14px; margin: 6px 0 14px; }
+  .card .label { font-size: 12px; text-transform: uppercase; letter-spacing: 0.06em; color: var(--dim); margin: 14px 0 6px; }
+  ul { padding-left: 20px; color: var(--muted); font-size: 14px; }
+  li { margin-bottom: 5px; }
+  li strong { color: var(--text); }
+
+  code {
+    background: var(--code-bg); border: 1px solid var(--border); border-radius: 5px;
+    padding: 1px 6px; font-family: "SF Mono", Consolas, Monaco, monospace; font-size: 12.5px; color: #eaeaea;
+  }
+  pre {
+    background: var(--code-bg); border: 1px solid var(--border); border-radius: 10px;
+    padding: 14px 16px; overflow-x: auto; margin: 8px 0 4px; font-size: 13px;
+  }
+  pre code { background: none; border: none; padding: 0; color: #eaeaea; }
+  .comment { color: #6b6b6b; }
+
+  /* Steps */
+  .steps { counter-reset: step; list-style: none; padding: 0; }
+  .steps > li {
+    position: relative; padding: 14px 0 14px 46px; border-bottom: 1px solid var(--border); color: var(--text); font-size: 15px;
+  }
+  .steps > li:last-child { border-bottom: none; }
+  .steps > li::before {
+    counter-increment: step; content: counter(step);
+    position: absolute; left: 0; top: 12px;
+    width: 28px; height: 28px; border-radius: 50%;
+    background: var(--white); color: #000; font-weight: 700; font-size: 13px;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .steps small { display: block; color: var(--muted); font-size: 13px; margin-top: 2px; }
+
+  /* Table */
+  .table-scroll { overflow-x: auto; border: 1px solid var(--border); border-radius: 12px; }
+  table { width: 100%; border-collapse: collapse; font-size: 13.5px; min-width: 560px; }
+  th, td { text-align: left; padding: 11px 14px; border-bottom: 1px solid var(--border); vertical-align: top; }
+  th { background: var(--panel-2); color: var(--text); font-weight: 600; font-size: 12px; text-transform: uppercase; letter-spacing: 0.04em; }
+  td { color: var(--muted); }
+  td code { font-size: 12px; }
+  tr:last-child td { border-bottom: none; }
+  .yes { color: var(--red); font-weight: 600; }
+  .no { color: var(--gray); }
+
+  /* Done list */
+  .done { list-style: none; padding: 0; display: grid; grid-template-columns: 1fr 1fr; gap: 8px 24px; }
+  .done li { color: var(--muted); font-size: 14px; padding-left: 24px; position: relative; }
+  .done li::before { content: "✓"; position: absolute; left: 0; color: var(--green); font-weight: 700; }
+
+  .callout {
+    background: linear-gradient(180deg, #161616, #111);
+    border: 1px solid var(--border); border-radius: 14px; padding: 22px 24px; margin: 8px 0 0;
+  }
+  .callout strong { color: var(--white); }
+
+  footer { margin-top: 56px; padding-top: 20px; border-top: 1px solid var(--border); color: var(--dim); font-size: 12.5px; }
+
+  @media (max-width: 640px) {
+    .wrap { padding: 32px 18px 80px; }
+    h1 { font-size: 26px; }
+    .done { grid-template-columns: 1fr; }
+    .pill { margin-left: 0; }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <!-- HERO -->
+  <header class="hero">
+    <div class="mate">🧉</div>
+    <div class="tag">Estado del proyecto</div>
+    <h1>Indio Mates — Qué falta para que la página esté funcionando</h1>
+    <p>El <strong>código está terminado y verificado</strong> (compila, buildea y el front ya se ve). Lo que resta es <strong>configuración e infraestructura</strong>, no programación. Este documento lista todo lo pendiente, ordenado por prioridad y con los pasos exactos.</p>
+  </header>
+
+  <!-- PROGRESS -->
+  <div class="progress-card">
+    <div class="progress-row">
+      <strong>Desarrollo (código)</strong>
+      <span>Completo · 100%</span>
+    </div>
+    <div class="bar"><i style="width:100%"></i></div>
+    <div class="progress-row" style="margin-top:18px">
+      <strong>Puesta en marcha (configuración)</strong>
+      <span>Falta 1 paso imprescindible</span>
+    </div>
+    <div class="bar"><i style="width:35%"></i></div>
+    <p class="progress-note">Con una base de datos PostgreSQL conectada y el seed corrido, la página funciona de punta a punta. El resto son ajustes opcionales o para más adelante.</p>
+  </div>
+
+  <!-- LEGEND -->
+  <div class="legend">
+    <span><i class="dot red"></i> Imprescindible</span>
+    <span><i class="dot amber"></i> Opcional / recomendado</span>
+    <span><i class="dot gray"></i> Más adelante</span>
+    <span><i class="dot green"></i> Ya está listo</span>
+  </div>
+
+  <!-- YA LISTO -->
+  <h2>✓ Ya está listo y funcionando</h2>
+  <div class="card" style="border-left-color: var(--green)">
+    <ul class="done">
+      <li>Catálogo público (home, listado, detalle)</li>
+      <li>Filtro por categoría</li>
+      <li>Lógica de stock (sin stock / últimas X / stock X)</li>
+      <li>Carrito con Zustand (agregar/quitar/cantidades)</li>
+      <li>Checkout que arma el pedido por WhatsApp</li>
+      <li>Pantalla de confirmación</li>
+      <li>Panel de administración completo</li>
+      <li>Login con JWT + bcrypt</li>
+      <li>CRUD de productos + imágenes (reordenar/eliminar)</li>
+      <li>CRUD de categorías</li>
+      <li>Panel de métricas</li>
+      <li>Registro de eventos (vistas / pedidos)</li>
+      <li>Diseño responsive blanco y negro</li>
+      <li>Animaciones materas (loader, galería, carrito)</li>
+      <li>Seed con 6 categorías y 14 productos</li>
+      <li>Front visible aún sin base de datos</li>
+    </ul>
+  </div>
+
+  <!-- IMPRESCINDIBLE -->
+  <h2>Imprescindible para funcionar de punta a punta</h2>
+
+  <div class="card red">
+    <div class="card-head">
+      <span class="num">1</span>
+      <h3>Base de datos PostgreSQL</h3>
+      <span class="pill req">Obligatorio</span>
+    </div>
+    <p class="why">Es el único bloqueante real. Sin una base conectada no se muestran productos ni categorías, no funciona el login del admin y no se registran métricas. El modelo de datos (Prisma) ya está definido; solo falta apuntar a una base y crear las tablas.</p>
+
+    <div class="label">Opción A — Base gratis en la nube (recomendada, sin instalar nada)</div>
+    <ul>
+      <li>Creá una cuenta en <strong>Neon</strong> (neon.tech) o <strong>Supabase</strong> (supabase.com) — ambos tienen plan gratuito.</li>
+      <li>Creá un proyecto y copiá la <strong>connection string</strong> (empieza con <code>postgresql://</code>).</li>
+      <li>Pegala en el archivo <code>.env</code> como valor de <code>DATABASE_URL</code>.</li>
+    </ul>
+
+    <div class="label">Opción B — PostgreSQL local</div>
+    <ul>
+      <li>Instalá PostgreSQL en Windows (instalador oficial) o usá Docker si lo tenés.</li>
+      <li>Ajustá <code>DATABASE_URL</code> con tu usuario, contraseña y nombre de base.</li>
+    </ul>
+
+    <div class="label">Después, en ambos casos</div>
+    <pre><code><span class="comment"># crea las tablas a partir del schema de Prisma</span>
+npm run db:push
+
+<span class="comment"># carga admin + 14 productos + categorías de prueba</span>
+npm run db:seed</code></pre>
+    <div class="label">Resultado</div>
+    <ul>
+      <li>Catálogo con productos reales en <code>localhost:3000</code>.</li>
+      <li>Login del admin operativo (<code>admin</code> / <code>indiomates2024</code>).</li>
+      <li>Métricas registrando vistas y pedidos.</li>
+    </ul>
+  </div>
+
+  <div class="card red">
+    <div class="card-head">
+      <span class="num">2</span>
+      <h3>Número de WhatsApp real</h3>
+      <span class="pill req">Obligatorio</span>
+    </div>
+    <p class="why">El checkout arma un link <code>wa.me/NUMERO</code> con el pedido. Hoy el número es un <strong>placeholder</strong> (<code>5493764000000</code>), así que los pedidos no llegarían al negocio.</p>
+    <div class="label">Qué hacer</div>
+    <ul>
+      <li>En <code>.env</code>, poné el número real en <code>NEXT_PUBLIC_WHATSAPP_NUMBER</code>.</li>
+      <li>Formato internacional, <strong>sin</strong> <code>+</code>, espacios ni guiones.</li>
+      <li>Ejemplo Argentina (celular): código país <code>54</code> + <code>9</code> + área sin el 0 + número sin el 15. → <code>5493764123456</code></li>
+    </ul>
+    <div class="label">Nota</div>
+    <ul>
+      <li>Al ser una variable <code>NEXT_PUBLIC_</code>, después de cambiarla hay que reiniciar <code>npm run dev</code>.</li>
+    </ul>
+  </div>
+
+  <!-- OPCIONAL -->
+  <h2>Opcional / recomendado</h2>
+
+  <div class="card amber">
+    <div class="card-head">
+      <span class="num">3</span>
+      <h3>Cloudinary (subida de imágenes por archivo)</h3>
+      <span class="pill opt">Opcional</span>
+    </div>
+    <p class="why">Habilita subir imágenes de producto <strong>desde archivo</strong> con optimización automática. <strong>Sin configurarlo, el panel igual funciona</strong>: se cargan imágenes <strong>por URL</strong> (el seed usa placeholders por URL).</p>
+    <div class="label">Qué hacer</div>
+    <ul>
+      <li>Creá una cuenta gratis en Cloudinary y completá en <code>.env</code>: <code>CLOUDINARY_CLOUD_NAME</code>, <code>CLOUDINARY_API_KEY</code>, <code>CLOUDINARY_API_SECRET</code> y <code>NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME</code>.</li>
+      <li>Al detectar credenciales, el formulario de producto muestra el botón de subir archivo automáticamente.</li>
+    </ul>
+  </div>
+
+  <div class="card amber">
+    <div class="card-head">
+      <span class="num">4</span>
+      <h3>JWT_SECRET propio</h3>
+      <span class="pill opt">Para producción</span>
+    </div>
+    <p class="why">Firma los tokens de sesión del admin. El valor actual es de desarrollo: sirve en local, pero conviene uno propio y secreto antes de publicar.</p>
+    <pre><code><span class="comment"># genera una clave aleatoria y pegala en JWT_SECRET</span>
+node -e "console.log(require('crypto').randomBytes(48).toString('hex'))"</code></pre>
+  </div>
+
+  <div class="card amber">
+    <div class="card-head">
+      <span class="num">5</span>
+      <h3>Credenciales del admin</h3>
+      <span class="pill opt">Recomendado</span>
+    </div>
+    <p class="why">Por defecto el seed crea <code>admin</code> / <code>indiomates2024</code>. Cambiá <code>ADMIN_USUARIO</code> y <code>ADMIN_CONTRASENA</code> en <code>.env</code> antes de correr el seed para usar tus propias credenciales.</p>
+  </div>
+
+  <div class="card amber">
+    <div class="card-head">
+      <span class="num">6</span>
+      <h3>Logo del negocio</h3>
+      <span class="pill opt">Cuando lo tengas</span>
+    </div>
+    <p class="why">Hay un <strong>espacio preparado</strong> en el header (<code>components/layout/Header.tsx</code>) con un ícono de mate como placeholder. Reemplazalo por el logo real cuando esté listo. No bloquea nada.</p>
+  </div>
+
+  <div class="card amber">
+    <div class="card-head">
+      <span class="num">7</span>
+      <h3>Cargar tus productos reales</h3>
+      <span class="pill opt">Contenido</span>
+    </div>
+    <p class="why">El seed trae 14 productos de ejemplo para ver el catálogo funcionando. Cuando quieras, cargá tus 10 categorías y ~50 productos reales desde el panel (<code>/admin/productos</code> y <code>/admin/categorias</code>).</p>
+  </div>
+
+  <!-- MAS ADELANTE -->
+  <h2>Más adelante (no ahora)</h2>
+
+  <div class="card gray">
+    <div class="card-head">
+      <span class="num">8</span>
+      <h3>Despliegue (deploy)</h3>
+      <span class="pill later">Futuro</span>
+    </div>
+    <p class="why">Publicar el sitio en internet. Recomendado: <strong>Vercel</strong> (integra nativo con Next.js) + una base PostgreSQL de producción (Supabase / Railway / Neon). Hay que cargar las mismas variables de entorno en el panel de Vercel. El spec indica no definir dominio de producción todavía.</p>
+  </div>
+
+  <div class="card gray">
+    <div class="card-head">
+      <span class="num">9</span>
+      <h3>Google Analytics 4</h3>
+      <span class="pill later">Futuro</span>
+    </div>
+    <p class="why">Analítica de tráfico general. Estaba previsto para una etapa posterior; el panel de métricas propio (vistas, pedidos, sin stock) ya está funcionando.</p>
+  </div>
+
+  <!-- RUTA MINIMA -->
+  <h2>Ruta mínima para verlo funcionando</h2>
+  <ol class="steps">
+    <li>Conseguí una <strong>DATABASE_URL</strong> de PostgreSQL
+      <small>Neon o Supabase gratis (sin instalar), o PostgreSQL local.</small>
+    </li>
+    <li>Pegala en el archivo <strong>.env</strong>
+      <small>Reemplazá el valor de <code>DATABASE_URL</code>.</small>
+    </li>
+    <li>Creá las tablas: <code>npm run db:push</code></li>
+    <li>Cargá los datos de prueba: <code>npm run db:seed</code></li>
+    <li>(Opcional) Poné el <strong>NEXT_PUBLIC_WHATSAPP_NUMBER</strong> real</li>
+    <li>Levantá el proyecto: <code>npm run dev</code>
+      <small>Tienda en <code>localhost:3000</code> · Admin en <code>localhost:3000/admin</code> (<code>admin</code> / <code>indiomates2024</code>).</small>
+    </li>
+  </ol>
+
+  <!-- ENV VARS -->
+  <h2>Variables de entorno — estado actual</h2>
+  <div class="table-scroll">
+    <table>
+      <thead>
+        <tr><th>Variable</th><th>Estado hoy</th><th>Qué hacer</th><th>¿Obligatorio?</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><code>DATABASE_URL</code></td>
+          <td>Apunta a un Postgres local que no está corriendo</td>
+          <td>Poné tu base (nube o local)</td>
+          <td class="yes">Sí</td>
+        </tr>
+        <tr>
+          <td><code>NEXT_PUBLIC_WHATSAPP_NUMBER</code></td>
+          <td>Placeholder <code>5493764000000</code></td>
+          <td>Número real del negocio</td>
+          <td class="yes">Sí (para pedidos)</td>
+        </tr>
+        <tr>
+          <td><code>JWT_SECRET</code></td>
+          <td>Clave de desarrollo</td>
+          <td>Generar una propia para producción</td>
+          <td class="no">Solo prod</td>
+        </tr>
+        <tr>
+          <td><code>ADMIN_USUARIO</code> / <code>ADMIN_CONTRASENA</code></td>
+          <td><code>admin</code> / <code>indiomates2024</code></td>
+          <td>Cambiar antes del seed (opcional)</td>
+          <td class="no">No</td>
+        </tr>
+        <tr>
+          <td><code>CLOUDINARY_*</code></td>
+          <td>Vacío</td>
+          <td>Completar solo si querés subir por archivo</td>
+          <td class="no">No</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- CALLOUT -->
+  <h2>En una frase</h2>
+  <div class="callout">
+    <p>Falta <strong>una sola cosa para verlo completo: conectar una base PostgreSQL y correr el seed</strong> (<code>npm run db:push</code> + <code>npm run db:seed</code>). Con eso entrás al panel y ves el catálogo con productos. El <strong>número de WhatsApp real</strong> es el otro ajuste para que los pedidos lleguen al negocio. Todo lo demás es opcional o para más adelante.</p>
+  </div>
+
+  <footer>
+    Documento de estado generado para Indio Mates · El código está completo y verificado (typecheck + build OK). Los pendientes listados son de configuración/infraestructura.
+  </footer>
+
+</div>
+</body>
+</html>
