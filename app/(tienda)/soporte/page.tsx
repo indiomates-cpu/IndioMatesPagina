@@ -42,7 +42,8 @@ const FAQS = [
 
 export default function SoportePage() {
   const linkSoporte = construirLinkWhatsApp(
-    '¡Hola Indio Mates! 🧉 Tengo una consulta:\n\n'
+    '¡Hola Indio Mates! 🧉 Tengo una consulta:\n\n',
+    { alternar: true }
   );
 
   return (
