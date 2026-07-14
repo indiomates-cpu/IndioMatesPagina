@@ -7,12 +7,19 @@ import { cn } from '@/lib/utils';
 export function CategoryFilter({
   categorias,
   activa,
+  orden,
 }: {
   categorias: CategoriaDTO[];
   activa?: string;
+  // Orden actual (si hay uno elegido), para no perderlo al cambiar de
+  // categoría desde estas píldoras.
+  orden?: string;
 }) {
   const pill =
     'whitespace-nowrap rounded-full border px-4 py-2 text-sm font-medium animate-entrada transition-all duration-300 ease-premium active:scale-95';
+
+  const sufijoOrden =
+    orden && orden !== 'novedades' ? `&orden=${orden}` : '';
 
   return (
     <nav
@@ -20,7 +27,7 @@ export function CategoryFilter({
       className="flex gap-2 overflow-x-auto scrollbar-hide pb-1"
     >
       <Link
-        href="/productos"
+        href={orden && orden !== 'novedades' ? `/productos?orden=${orden}` : '/productos'}
         className={cn(
           pill,
           !activa
@@ -35,7 +42,7 @@ export function CategoryFilter({
         return (
           <Link
             key={c.id}
-            href={`/productos?categoria=${c.slug}`}
+            href={`/productos?categoria=${c.slug}${sufijoOrden}`}
             style={{ animationDelay: `${(i + 1) * 40}ms` }}
             className={cn(
               pill,

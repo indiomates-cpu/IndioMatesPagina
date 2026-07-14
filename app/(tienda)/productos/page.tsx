@@ -1,7 +1,9 @@
 import type { Metadata } from 'next';
 import { ProductGrid } from '@/components/catalogo/ProductGrid';
 import { CategoryFilter } from '@/components/catalogo/CategoryFilter';
+import { SortSelect } from '@/components/catalogo/SortSelect';
 import { obtenerCategorias, obtenerProductos } from '@/lib/queries';
+import type { OrdenProductos } from '@/lib/queries';
 
 export const metadata: Metadata = {
   title: 'Productos',
@@ -10,13 +12,16 @@ export const metadata: Metadata = {
 export default async function ProductosPage({
   searchParams,
 }: {
-  searchParams: Promise<{ categoria?: string }>;
+  searchParams: Promise<{ categoria?: string; orden?: string }>;
 }) {
-  const { categoria } = await searchParams;
+  const { categoria, orden } = await searchParams;
 
   const [categorias, productos] = await Promise.all([
     obtenerCategorias(),
-    obtenerProductos({ categoriaSlug: categoria }),
+    obtenerProductos({
+      categoriaSlug: categoria,
+      orden: orden as OrdenProductos | undefined,
+    }),
   ]);
 
   const categoriaActiva = categorias.find((c) => c.slug === categoria);
@@ -33,8 +38,9 @@ export default async function ProductosPage({
         </p>
       </header>
 
-      <div className="mb-8">
-        <CategoryFilter categorias={categorias} activa={categoria} />
+      <div className="mb-8 flex flex-wrap items-center justify-between gap-3">
+        <CategoryFilter categorias={categorias} activa={categoria} orden={orden} />
+        <SortSelect />
       </div>
 
       {productos.length === 0 ? (
@@ -43,8 +49,11 @@ export default async function ProductosPage({
         </div>
       ) : (
         // `key` fuerza a reiniciar el revelado ("Ver más") al cambiar de
-        // categoría, para que cada vista arranque colapsada.
-        <ProductGrid key={categoria ?? 'todos'} productos={productos} />
+        // categoría u orden, para que cada vista arranque colapsada.
+        <ProductGrid
+          key={`${categoria ?? 'todos'}-${orden ?? 'novedades'}`}
+          productos={productos}
+        />
       )}
     </div>
   );

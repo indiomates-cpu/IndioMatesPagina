@@ -60,10 +60,35 @@ export async function obtenerCategoriasConConteo(): Promise<
   );
 }
 
-// Productos activos, opcionalmente filtrados por slug de categoría.
+// Órdenes disponibles para el listado de productos.
+export type OrdenProductos =
+  | 'novedades'
+  | 'precio-asc'
+  | 'precio-desc'
+  | 'nombre-asc'
+  | 'nombre-desc';
+
+function resolverOrderBy(orden?: OrdenProductos) {
+  switch (orden) {
+    case 'precio-asc':
+      return { precio: 'asc' as const };
+    case 'precio-desc':
+      return { precio: 'desc' as const };
+    case 'nombre-asc':
+      return { nombre: 'asc' as const };
+    case 'nombre-desc':
+      return { nombre: 'desc' as const };
+    default:
+      return { creadoEn: 'desc' as const };
+  }
+}
+
+// Productos activos, opcionalmente filtrados por slug de categoría y
+// ordenados según `orden` (por defecto, los más nuevos primero).
 export async function obtenerProductos(opciones?: {
   categoriaSlug?: string;
   soloDestacados?: boolean;
+  orden?: OrdenProductos;
   limite?: number;
 }): Promise<ProductoDTO[]> {
   return seguro(
@@ -79,7 +104,7 @@ export async function obtenerProductos(opciones?: {
           categoria: true,
           imagenes: { orderBy: { orden: 'asc' } },
         },
-        orderBy: { creadoEn: 'desc' },
+        orderBy: resolverOrderBy(opciones?.orden),
         ...(opciones?.limite ? { take: opciones.limite } : {}),
       });
       return productos.map(serializarProducto);
