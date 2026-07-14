@@ -4,7 +4,7 @@ import type { ItemCarrito } from './types';
 // Arma el texto plano del pedido con productos, cantidades y subtotal.
 export function armarMensajePedido(items: ItemCarrito[], total: number): string {
   const lineas: string[] = [];
-  lineas.push('¡Hola Indio Mates! 🧉 Quiero hacer este pedido:');
+  lineas.push('¡Hola Indio Mates! Quiero hacer este pedido:');
   lineas.push('');
 
   items.forEach((item) => {
