@@ -1,8 +1,8 @@
 'use client';
 
 import Link from 'next/link';
+import Image from 'next/image';
 import { motion } from 'framer-motion';
-import { MateIcono } from '@/components/mate/MateIcono';
 import { EASE_PREMIUM, RESORTE_SUAVE } from '@/lib/motion';
 
 // Líneas del titular: cada una se revela desde su propia "máscara".
@@ -10,26 +10,8 @@ const LINEAS_TITULO = ['Todo para tu', 'mate, en un', 'solo lugar.'];
 
 export function Hero() {
   return (
-    <section className="relative overflow-hidden bg-tinta text-papel">
-      {/* Textura sutil de fondo */}
-      <div
-        className="pointer-events-none absolute inset-0 opacity-[0.04]"
-        style={{
-          backgroundImage:
-            'radial-gradient(circle at 1px 1px, #fff 1px, transparent 0)',
-          backgroundSize: '22px 22px',
-        }}
-      />
-
-      {/* Halo que deriva detrás del contenido */}
-      <div
-        aria-hidden
-        className="pointer-events-none absolute -right-1/4 -top-1/2 h-[80vmax] w-[80vmax] rounded-full animate-deriva-lenta"
-        style={{
-          background:
-            'radial-gradient(circle at center, rgb(255 255 255 / 0.05), transparent 60%)',
-        }}
-      />
+    <section className="relative overflow-hidden bg-black text-papel">
+    
 
       <div className="relative mx-auto grid max-w-6xl gap-8 px-4 py-16 sm:px-6 md:grid-cols-2 md:items-center md:py-24">
         <div>
@@ -39,11 +21,13 @@ export function Hero() {
             transition={{ duration: 0.5, ease: EASE_PREMIUM }}
             className="relative inline-block overflow-hidden rounded-full border border-papel/20 px-3 py-1 text-xs uppercase tracking-widest text-papel/70"
           >
-            {/* Reflejo de luz que barre la pastilla de vez en cuando */}
             <span
               aria-hidden
               className="absolute inset-y-0 left-0 w-1/2 bg-gradient-to-r from-transparent via-papel/10 to-transparent"
-              style={{ animation: 'brillo 5.5s cubic-bezier(0.22, 1, 0.36, 1) 2s infinite' }}
+              style={{
+                animation:
+                  'brillo 5.5s cubic-bezier(0.22, 1, 0.36, 1) 2s infinite',
+              }}
             />
             🧉 Cultura matera argentina
           </motion.span>
@@ -70,7 +54,11 @@ export function Hero() {
           <motion.p
             initial={{ opacity: 0, y: 16 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.4, ease: EASE_PREMIUM }}
+            transition={{
+              duration: 0.6,
+              delay: 0.4,
+              ease: EASE_PREMIUM,
+            }}
             className="mt-5 max-w-md text-papel/70"
           >
             Mates, bombillas, yerberas, termos y accesorios elegidos con
@@ -80,7 +68,11 @@ export function Hero() {
           <motion.div
             initial={{ opacity: 0, y: 16 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.5, ease: EASE_PREMIUM }}
+            transition={{
+              duration: 0.6,
+              delay: 0.5,
+              ease: EASE_PREMIUM,
+            }}
             className="mt-8 flex flex-wrap gap-3"
           >
             <Link
@@ -89,6 +81,7 @@ export function Hero() {
             >
               Ver productos
             </Link>
+
             <Link
               href="#categorias"
               className="rounded-xl border border-papel/25 px-6 py-3.5 font-medium text-papel transition-all duration-300 ease-premium hover:border-papel/50 hover:bg-papel/10 active:scale-[0.97]"
@@ -98,41 +91,27 @@ export function Hero() {
           </motion.div>
         </div>
 
-        {/* Mate decorativo: flota, respira y un reflejo orbita su aro. */}
+        {/* Logo de marca */}
         <motion.div
-          initial={{ opacity: 0, scale: 0.8 }}
+          initial={{ opacity: 0, scale: 1 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{ ...RESORTE_SUAVE, delay: 0.25 }}
           className="relative mx-auto hidden md:block"
         >
           <div className="animate-flotar">
-            <div className="relative flex h-64 w-64 items-center justify-center rounded-full border border-papel/15">
-              {/* Arco de luz girando alrededor del aro */}
-              <div
-                aria-hidden
-                className="aro-luz absolute inset-0 rounded-full animate-girar-lento"
-              />
-              {/* Resplandor suave detrás del mate */}
-              <div
-                aria-hidden
-                className="absolute inset-8 rounded-full"
-                style={{
-                  background:
-                    'radial-gradient(circle, rgb(255 255 255 / 0.07), transparent 70%)',
-                }}
-              />
-              <div className="absolute -top-3 left-1/2 flex -translate-x-1/2 gap-2">
-                {[0, 1, 2].map((i) => (
-                  <span
-                    key={i}
-                    className="block h-8 w-1.5 rounded-full bg-papel/50 blur-[1px] animate-vapor"
-                    style={{ animationDelay: `${i * 0.4}s` }}
-                  />
-                ))}
-              </div>
-              <MateIcono className="h-36 w-36 text-papel" />
-            </div>
-          </div>
+  <div className="relative flex h-45 w-45 items-center justify-center lg:h-[34rem] lg:w-[34rem]">
+    <div className="relative h-full w-full">
+      <Image
+        src="/logo.jpeg"
+        alt="Indio Mates"
+        fill
+        sizes="(max-width:2048px) 800px, 800px"
+        priority
+        className="scale-[1] object-contain"
+      />
+    </div>
+  </div>
+</div>
         </motion.div>
       </div>
     </section>
