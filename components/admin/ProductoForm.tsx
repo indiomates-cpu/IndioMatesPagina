@@ -238,7 +238,7 @@ export function ProductoForm({
                     <button
                       type="button"
                       onClick={() => eliminarImagen(img.key)}
-                      className="presionable rounded-md border border-tinta/15 px-2 py-1 text-xs text-tinta/60 hover:border-tinta hover:text-tinta"
+                      className="presionable rounded-md border border-tinta/15 px-2 py-1 text-xs text-red-600 hover:border-red-400 hover:bg-red-50 hover:text-red-700"
                     >
                       Quitar
                     </button>
@@ -382,7 +382,7 @@ export function ProductoForm({
         </label>
 
         {error && (
-          <p className="rounded-lg bg-tinta/5 px-3 py-2 text-sm text-tinta">
+          <p className="rounded-lg border border-red-200 bg-red-50 px-3 py-2 text-sm text-red-700">
             {error}
           </p>
         )}

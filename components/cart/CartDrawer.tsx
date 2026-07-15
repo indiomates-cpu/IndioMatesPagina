@@ -146,7 +146,7 @@ export function CartDrawer() {
                             <button
                               onClick={() => quitar(item.id)}
                               aria-label={`Quitar ${item.nombre}`}
-                              className="text-tinta/40 transition-all duration-300 ease-premium hover:rotate-90 hover:text-tinta active:scale-75"
+                              className="text-red-400 transition-all duration-300 ease-premium hover:rotate-90 hover:text-red-600 active:scale-75"
                             >
                               <svg viewBox="0 0 24 24" className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
                                 <path d="M18 6 6 18M6 6l12 12" />

@@ -127,7 +127,7 @@ export default function CarritoPage() {
                     </Link>
                     <button
                       onClick={() => quitar(item.id)}
-                      className="enlace-subrayado text-sm text-tinta/50 transition-colors duration-300 hover:text-tinta active:scale-95"
+                      className="enlace-subrayado text-sm text-red-500 transition-colors duration-300 hover:text-red-700 active:scale-95"
                     >
                       Quitar
                     </button>

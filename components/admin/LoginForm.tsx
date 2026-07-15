@@ -89,7 +89,7 @@ export function LoginForm() {
             }}
             exit={{ opacity: 0, height: 0 }}
             transition={{ duration: 0.45 }}
-            className="overflow-hidden rounded-lg bg-tinta/5 text-sm text-tinta"
+            className="overflow-hidden rounded-lg border border-red-200 bg-red-50 text-sm text-red-700"
           >
             <span className="block px-3 py-2">{error}</span>
           </motion.p>
