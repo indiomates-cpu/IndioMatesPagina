@@ -39,6 +39,15 @@ export default function RootLayout({
   return (
     <html lang="es" className={`${inter.variable} ${spaceGrotesk.variable}`}>
       <body className="min-h-screen bg-papel font-sans text-tinta antialiased">
+        {/* Se ejecuta antes del primer pintado: si el loader ya se mostró en
+            esta sesión, lo oculta al instante (evita ver un frame del sitio
+            antes de que aparezca la pantalla de carga en la primera visita). */}
+        <script
+          dangerouslySetInnerHTML={{
+            __html:
+              "(function(){try{if(sessionStorage.getItem('indio-loader-visto'))document.documentElement.classList.add('loader-oculto')}catch(e){}})()",
+          }}
+        />
         <ProveedorMotion>{children}</ProveedorMotion>
       </body>
     </html>

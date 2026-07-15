@@ -65,19 +65,19 @@ export function Hero() {
           </div>
         </div>
 
-        {/* Logo de marca (sólo en desktop; en mobile el header ya muestra el logo) */}
+        {/* Logo de marca flotante (debajo del texto en mobile, a la derecha en desktop) */}
         <div
-          className="animate-aparecer relative mx-auto hidden md:block"
+          className="animate-aparecer relative mx-auto"
           style={{ animationDelay: '250ms' }}
         >
           <div className="animate-flotar">
-            <div className="relative flex h-[26rem] w-[26rem] items-center justify-center lg:h-[32rem] lg:w-[32rem]">
+            <div className="relative flex h-52 w-52 items-center justify-center sm:h-72 sm:w-72 md:h-[26rem] md:w-[26rem] lg:h-[32rem] lg:w-[32rem]">
               <Image
                 src="/logo.png"
                 alt="Indio Mates"
                 fill
                 unoptimized
-                sizes="(max-width: 1024px) 26rem, 32rem"
+                sizes="(max-width: 640px) 13rem, (max-width: 1024px) 26rem, 32rem"
                 priority
                 className="object-contain"
               />

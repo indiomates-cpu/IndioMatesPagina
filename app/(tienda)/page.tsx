@@ -35,11 +35,23 @@ export default async function HomePage() {
         {destacados.length === 0 ? (
           <EmptyState />
         ) : (
-          <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4">
-            {destacados.map((p, i) => (
-              <ProductCard key={p.id} producto={p} indice={i} />
-            ))}
-          </div>
+          <>
+            <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4">
+              {destacados.map((p, i) => (
+                <ProductCard key={p.id} producto={p} indice={i} />
+              ))}
+            </div>
+            {/* Acceso a todo el catálogo (visible en mobile; en desktop ya
+                está el "Ver todo" arriba a la derecha). */}
+            <div className="mt-8 sm:hidden">
+              <Link
+                href="/productos"
+                className="flex w-full items-center justify-center rounded-xl border border-tinta/20 px-6 py-3.5 font-medium transition-all duration-300 ease-premium hover:border-tinta/50 hover:bg-tinta/5 active:scale-[0.98]"
+              >
+                Ver todos los productos
+              </Link>
+            </div>
+          </>
         )}
       </section>
 

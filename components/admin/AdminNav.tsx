@@ -17,7 +17,7 @@ export function AdminNav() {
   const pathname = usePathname();
 
   return (
-    <nav className="flex flex-col gap-1">
+    <nav className="flex flex-row gap-1 overflow-x-auto scrollbar-hide md:flex-col">
       {LINKS.map((l) => {
         const activo = l.exact
           ? pathname === l.href
@@ -27,7 +27,7 @@ export function AdminNav() {
             key={l.href}
             href={l.href}
             className={cn(
-              'presionable relative rounded-lg px-3 py-2.5 text-sm font-medium',
+              'presionable relative whitespace-nowrap rounded-lg px-3 py-2.5 text-sm font-medium',
               activo
                 ? 'text-tinta'
                 : 'text-papel/70 hover:bg-papel/10 hover:text-papel'

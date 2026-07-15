@@ -19,7 +19,7 @@ export default async function PanelLayout({
   return (
     <div className="min-h-screen bg-papel-hueso md:grid md:grid-cols-[240px_1fr]">
       {/* Sidebar */}
-      <aside className="flex flex-col gap-6 bg-tinta p-5 text-papel md:min-h-screen">
+      <aside className="sticky top-0 z-20 flex flex-col gap-4 bg-tinta p-4 text-papel md:static md:min-h-screen md:gap-6 md:p-5">
         <div className="flex items-center justify-between">
           <Link href="/admin" className="group flex items-center gap-2">
             <span className="flex h-8 w-8 items-center justify-center rounded-full bg-papel text-tinta transition-transform duration-300 ease-premium group-hover:-rotate-6 group-hover:scale-105">
@@ -32,16 +32,20 @@ export default async function PanelLayout({
               </span>
             </span>
           </Link>
-          <Link
-            href="/"
-            target="_blank"
-            className="text-xs text-papel/50 underline underline-offset-2 hover:text-papel md:hidden"
-          >
-            Ver sitio
-          </Link>
+          {/* Acciones compactas (sólo mobile) */}
+          <div className="flex items-center gap-2 md:hidden">
+            <Link
+              href="/"
+              target="_blank"
+              className="presionable rounded-lg border border-papel/20 px-2.5 py-1.5 text-xs text-papel/70 hover:bg-papel/10"
+            >
+              Ver sitio
+            </Link>
+            <LogoutButton className="presionable whitespace-nowrap rounded-lg border border-papel/20 px-2.5 py-1.5 text-xs text-papel/70 hover:bg-papel/10 disabled:opacity-60" />
+          </div>
         </div>
 
-        <div className="flex-1 overflow-x-auto md:overflow-visible">
+        <div className="md:flex-1">
           <AdminNav />
         </div>
 

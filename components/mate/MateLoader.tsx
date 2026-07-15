@@ -15,7 +15,11 @@ const DURACION_MS = 1600;
 const DURACION_REDUCIDA_MS = 800;
 
 export function MateLoader() {
-  const [visible, setVisible] = useState(false);
+  // Arranca en `true` para que el SSR ya renderice el loader y cubra la
+  // pantalla desde el primer frame (sin flash del sitio). En visitas donde ya
+  // se mostró, un script bloqueante + CSS (.loader-oculto) lo ocultan al
+  // instante, y este efecto lo desmonta.
+  const [visible, setVisible] = useState(true);
   const reducirMovimiento = useReducedMotion();
 
   function cerrar() {
@@ -34,9 +38,12 @@ export function MateLoader() {
     } catch {
       /* noop */
     }
-    if (yaVisto) return;
+    // Ya se mostró en esta sesión: desmontarlo (el CSS ya lo tenía oculto).
+    if (yaVisto) {
+      setVisible(false);
+      return;
+    }
 
-    setVisible(true);
     const timer = window.setTimeout(
       cerrar,
       reducirMovimiento ? DURACION_REDUCIDA_MS : DURACION_MS
@@ -63,7 +70,7 @@ export function MateLoader() {
           role="status"
           aria-label={`Cargando ${NOMBRE_NEGOCIO}`}
           onClick={cerrar}
-          className="fixed inset-0 z-[100] flex flex-col items-center justify-center overflow-hidden bg-tinta text-papel"
+          className="mate-loader fixed inset-0 z-[100] flex flex-col items-center justify-center overflow-hidden bg-tinta text-papel"
           initial={{ opacity: 1 }}
           exit={{ opacity: 0 }}
           transition={{ duration: 0.5, ease: 'easeInOut' }}

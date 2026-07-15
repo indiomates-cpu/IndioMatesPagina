@@ -115,6 +115,13 @@ body {
   }
 }
 
+/* Oculta al instante el loader en visitas donde ya se mostró en la sesión
+   (la clase la agrega un script bloqueante antes del primer pintado). Evita
+   que se vea un frame del sitio antes del loader en la primera visita. */
+.loader-oculto .mate-loader {
+  display: none !important;
+}
+
 /* Respeta a quienes prefieren menos movimiento. */
 @media (prefers-reduced-motion: reduce) {
   *,
