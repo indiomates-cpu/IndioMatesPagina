@@ -6,6 +6,7 @@ import type { ProductoDTO } from '@/lib/types';
 import { useCarrito } from '@/store/cart';
 import { EASE_PREMIUM } from '@/lib/motion';
 import { QuantityStepper } from '@/components/cart/QuantityStepper';
+import { cn } from '@/lib/utils';
 
 export function AddToCartSection({ producto }: { producto: ProductoDTO }) {
   const agregar = useCarrito((e) => e.agregar);
@@ -53,7 +54,12 @@ export function AddToCartSection({ producto }: { producto: ProductoDTO }) {
       <motion.button
         whileTap={{ scale: 0.97 }}
         onClick={handleAgregar}
-        className="flex flex-1 items-center justify-center gap-2 rounded-xl bg-tinta py-4 font-medium text-papel transition-all duration-300 ease-premium hover:-translate-y-0.5 hover:bg-tinta-suave hover:shadow-flotante active:translate-y-0 active:shadow-none"
+        className={cn(
+          'flex flex-1 items-center justify-center gap-2 rounded-xl py-4 font-medium text-papel transition-all duration-300 ease-premium active:translate-y-0 active:shadow-none',
+          agregado
+            ? 'bg-green-600 shadow-flotante'
+            : 'bg-tinta hover:-translate-y-0.5 hover:bg-tinta-suave hover:shadow-flotante'
+        )}
       >
         <AnimatePresence mode="popLayout" initial={false}>
           {agregado ? (

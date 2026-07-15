@@ -5,7 +5,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { AnimatePresence, motion } from 'framer-motion';
 import type { ProductoDTO } from '@/lib/types';
-import { formatearPrecio } from '@/lib/utils';
+import { formatearPrecio, cn } from '@/lib/utils';
 import { IMAGEN_PLACEHOLDER, calcularDescuentoPorcentaje } from '@/lib/constants';
 import { useCarrito } from '@/store/cart';
 import { EASE_PREMIUM } from '@/lib/motion';
@@ -91,7 +91,7 @@ export function ProductCard({
           </h3>
         </Link>
 
-        <div className="mt-auto flex items-end justify-between pt-3">
+        <div className="mt-auto flex flex-col gap-2 pt-3 sm:flex-row sm:items-end sm:justify-between sm:gap-0">
           <div className="flex flex-col">
             {descuento !== null && (
               <span className="text-xs text-tinta/40 line-through">
@@ -109,7 +109,12 @@ export function ProductCard({
             aria-label={
               sinStock ? 'Sin stock' : `Agregar ${producto.nombre} al carrito`
             }
-            className="inline-flex h-9 min-w-[5.25rem] items-center justify-center rounded-lg bg-tinta px-3 text-sm font-medium text-papel transition-all duration-300 ease-premium hover:bg-tinta-suave hover:shadow-flotante-sm disabled:cursor-not-allowed disabled:bg-tinta/20 disabled:text-tinta/40 disabled:shadow-none"
+            className={cn(
+              'inline-flex h-9 w-full items-center justify-center gap-1.5 rounded-lg px-3 text-sm font-medium text-papel transition-all duration-300 ease-premium disabled:cursor-not-allowed disabled:bg-tinta/20 disabled:text-tinta/40 disabled:shadow-none sm:w-auto sm:min-w-[9rem]',
+              agregado
+                ? 'bg-green-600 shadow-flotante-sm'
+                : 'bg-tinta hover:bg-tinta-suave hover:shadow-flotante-sm'
+            )}
           >
             <AnimatePresence mode="popLayout" initial={false}>
               {sinStock ? (
@@ -136,7 +141,7 @@ export function ProductCard({
                   exit={{ y: -12, opacity: 0 }}
                   transition={{ duration: 0.22, ease: EASE_PREMIUM }}
                 >
-                  Agregar
+                  Agregar al carrito
                 </motion.span>
               )}
             </AnimatePresence>
