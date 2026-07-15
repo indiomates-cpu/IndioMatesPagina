@@ -35,19 +35,18 @@ export function Header() {
       )}
     >
       <div className="mx-auto flex h-16 max-w-6xl items-center justify-between gap-4 px-4 sm:px-6">
-        {/* Espacio del logo (preparado para agregarlo después) */}
         <Link
           href="/"
           className="group flex items-center gap-2.5"
           aria-label={`${NOMBRE_NEGOCIO} — inicio`}
         >
-          <span className="relative flex h-9 w-9 items-center justify-center overflow-hidden rounded-full transition-transform duration-300 ease-premium group-hover:-rotate-6 group-hover:scale-105 group-active:scale-95">
+          <span className="relative h-10 w-10 shrink-0 transition-transform duration-300 ease-premium group-hover:scale-110 group-active:scale-95">
             <Image
-              src="/logo.png"
+              src="/logo2.png"
               alt={NOMBRE_NEGOCIO}
               fill
-              sizes="36px"
-              className="object-cover"
+              sizes="40px"
+              className="object-contain"
               priority
             />
           </span>
