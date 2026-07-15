@@ -42,20 +42,19 @@ export function ProductCard({
     timerRef.current = window.setTimeout(() => setAgregado(false), 1400);
   }
 
+  // Entrada al montar por CSS (animate-aparecer), NO por framer: las
+  // animaciones de montaje de framer no se disparan de forma confiable en
+  // este stack (v11 + React 19) y dejaban las tarjetas —y sus imágenes—
+  // invisibles. El CSS siempre corre. framer sólo maneja el hover (transform),
+  // que no pelea con el fundido de opacidad del CSS.
   return (
     <motion.article
-      initial={{ opacity: 0, y: 24 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, margin: '-40px' }}
-      whileHover={{ y: -5 }}
-      transition={{
-        duration: 0.55,
-        ease: EASE_PREMIUM,
-        // Las tarjetas de una misma fila entran levemente escalonadas.
-        delay: (indice % 4) * 0.06,
-        y: { type: 'spring', stiffness: 300, damping: 22 },
+      whileHover={{
+        y: -5,
+        transition: { type: 'spring', stiffness: 300, damping: 24 },
       }}
-      className="group flex flex-col overflow-hidden rounded-2xl border border-tinta/10 bg-papel transition-[box-shadow,border-color] duration-500 ease-premium hover:border-tinta/25 hover:shadow-flotante"
+      style={{ animationDelay: `${(indice % 8) * 50}ms` }}
+      className="group flex animate-aparecer flex-col overflow-hidden rounded-2xl border border-tinta/10 bg-papel transition-[box-shadow,border-color] duration-500 ease-premium hover:border-tinta/25 hover:shadow-flotante"
     >
       <Link href={`/productos/${producto.slug}`} className="block">
         <div className="relative aspect-square overflow-hidden bg-papel-hueso">

@@ -49,6 +49,17 @@ const config: Config = {
           '0%': { opacity: '0', transform: 'translateY(8px)' },
           '100%': { opacity: '1', transform: 'translateY(0)' },
         },
+        // Fundido de opacidad solo (sin transform): se combina con hovers de
+        // framer sin pelear por la propiedad transform.
+        aparecer: {
+          from: { opacity: '0' },
+          to: { opacity: '1' },
+        },
+        // Sube desde abajo dentro de una máscara (para títulos con overflow).
+        'subir-mascara': {
+          from: { transform: 'translateY(110%)' },
+          to: { transform: 'translateY(0)' },
+        },
         // Deriva orgánica para halos y fondos (sólo transform: apto GPU).
         deriva: {
           '0%, 100%': { transform: 'translate3d(0, 0, 0) scale(1)' },
@@ -79,6 +90,8 @@ const config: Config = {
         'vapor-lento': 'vapor 3.4s ease-in-out infinite',
         latido: 'latido 0.4s ease-in-out',
         entrada: 'entrada 0.5s ease-out both',
+        aparecer: 'aparecer 0.5s ease-out both',
+        'subir-mascara': 'subir-mascara 0.7s cubic-bezier(0.22, 1, 0.36, 1) both',
         deriva: 'deriva 16s ease-in-out infinite',
         'deriva-lenta': 'deriva 22s ease-in-out infinite reverse',
         flotar: 'flotar 5.5s ease-in-out infinite',

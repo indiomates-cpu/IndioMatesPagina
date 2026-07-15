@@ -10,12 +10,13 @@ import { IMAGEN_PLACEHOLDER } from '@/lib/constants';
 import { QuantityStepper } from '@/components/cart/QuantityStepper';
 import { useConfirmarPedido } from '@/hooks/useConfirmarPedido';
 import { MateIcono } from '@/components/mate/MateIcono';
-import {
-  EASE_PREMIUM,
-  listaEscalonada,
-  itemLista,
-} from '@/lib/motion';
+import { EASE_PREMIUM } from '@/lib/motion';
 
+// Entradas por CSS (animate-entrada). framer se usa sólo para lo disparado por
+// evento: salida de un ítem al quitarlo (AnimatePresence), reflow (layout),
+// odómetro del subtotal y el tap del botón. Las animaciones de MONTAJE de
+// framer no son confiables en este stack y dejaban invisibles el resumen y el
+// botón de confirmar.
 export default function CarritoPage() {
   const items = useCarrito((e) => e.items);
   const quitar = useCarrito((e) => e.quitar);
@@ -37,14 +38,9 @@ export default function CarritoPage() {
 
   if (items.length === 0) {
     return (
-      <motion.div
-        className="mx-auto flex max-w-4xl flex-col items-center px-4 py-20 text-center sm:px-6"
-        variants={listaEscalonada}
-        initial="oculto"
-        animate="visible"
-      >
+      <div className="mx-auto flex max-w-4xl flex-col items-center px-4 py-20 text-center sm:px-6">
         {/* Mate vacío con su vapor, esperando compañía. */}
-        <motion.div variants={itemLista} className="relative">
+        <div className="animate-entrada relative">
           <div className="absolute -top-5 left-1/2 flex -translate-x-1/2 gap-1.5">
             {[0, 1].map((i) => (
               <span
@@ -55,25 +51,27 @@ export default function CarritoPage() {
             ))}
           </div>
           <MateIcono className="h-16 w-16 text-tinta/25" />
-        </motion.div>
-        <motion.h1
-          variants={itemLista}
-          className="mt-6 font-display text-3xl font-bold"
+        </div>
+        <h1
+          className="animate-entrada mt-6 font-display text-3xl font-bold"
+          style={{ animationDelay: '80ms' }}
         >
           Tu carrito está vacío
-        </motion.h1>
-        <motion.p variants={itemLista} className="mt-2 text-tinta/60">
+        </h1>
+        <p
+          className="animate-entrada mt-2 text-tinta/60"
+          style={{ animationDelay: '160ms' }}
+        >
           Agregá productos para armar tu pedido.
-        </motion.p>
-        <motion.div variants={itemLista}>
-          <Link
-            href="/productos"
-            className="mt-6 inline-block rounded-xl bg-tinta px-6 py-3.5 font-medium text-papel transition-all duration-300 ease-premium hover:-translate-y-0.5 hover:bg-tinta-suave hover:shadow-flotante active:translate-y-0 active:scale-[0.97] active:shadow-none"
-          >
-            Ver productos
-          </Link>
-        </motion.div>
-      </motion.div>
+        </p>
+        <Link
+          href="/productos"
+          className="animate-entrada mt-6 inline-block rounded-xl bg-tinta px-6 py-3.5 font-medium text-papel transition-all duration-300 ease-premium hover:-translate-y-0.5 hover:bg-tinta-suave hover:shadow-flotante active:translate-y-0 active:scale-[0.97] active:shadow-none"
+          style={{ animationDelay: '240ms' }}
+        >
+          Ver productos
+        </Link>
+      </div>
     );
   }
 
@@ -85,18 +83,12 @@ export default function CarritoPage() {
 
       <div className="grid gap-8 lg:grid-cols-[1fr_320px]">
         {/* Lista de ítems */}
-        <motion.ul
-          className="divide-y divide-tinta/10"
-          variants={listaEscalonada}
-          initial="oculto"
-          animate="visible"
-        >
+        <ul className="divide-y divide-tinta/10">
           <AnimatePresence mode="popLayout" initial={false}>
             {items.map((item) => (
               <motion.li
                 key={item.id}
                 layout
-                variants={itemLista}
                 exit={{
                   opacity: 0,
                   x: 56,
@@ -152,15 +144,10 @@ export default function CarritoPage() {
               </motion.li>
             ))}
           </AnimatePresence>
-        </motion.ul>
+        </ul>
 
         {/* Resumen */}
-        <motion.aside
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5, delay: 0.15, ease: EASE_PREMIUM }}
-          className="h-fit rounded-2xl border border-tinta/10 bg-papel-hueso p-6 lg:sticky lg:top-24"
-        >
+        <aside className="animate-entrada h-fit rounded-2xl border border-tinta/10 bg-papel-hueso p-6 lg:sticky lg:top-24">
           <h2 className="font-display text-lg font-semibold">Resumen del pedido</h2>
           <div className="mt-4 flex items-center justify-between border-t border-tinta/10 pt-4">
             <span className="text-tinta/60">Subtotal</span>
@@ -197,7 +184,7 @@ export default function CarritoPage() {
             Te llevamos a WhatsApp con el pedido ya escrito para coordinar pago y
             entrega.
           </p>
-        </motion.aside>
+        </aside>
       </div>
     </div>
   );
