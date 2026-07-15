@@ -54,13 +54,42 @@ export default async function MetricasPage() {
 
   const maxVistas = masVistos[0]?.vistas ?? 1;
 
+  const gaConfigurado = Boolean(process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID);
+
   return (
     <div>
-      <div className="mb-6">
-        <h1 className="font-display text-2xl font-bold">Métricas</h1>
-        <p className="text-sm text-tinta/60">
-          Basadas en los eventos registrados en el sitio.
-        </p>
+      <div className="mb-6 flex flex-wrap items-start justify-between gap-4">
+        <div>
+          <h1 className="font-display text-2xl font-bold">Métricas</h1>
+          <p className="text-sm text-tinta/60">
+            Basadas en los eventos registrados en el sitio.
+          </p>
+        </div>
+
+        {gaConfigurado ? (
+          <a
+            href="https://analytics.google.com/"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="elevable presionable flex items-center gap-2 rounded-xl border border-tinta/15 bg-papel px-4 py-2.5 text-sm font-medium"
+          >
+            <svg viewBox="0 0 24 24" className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M18 20V10M12 20V4M6 20v-6" />
+            </svg>
+            Ver Google Analytics
+            <svg viewBox="0 0 24 24" className="h-3.5 w-3.5" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M7 17 17 7M7 7h10v10" />
+            </svg>
+          </a>
+        ) : (
+          <p className="max-w-xs rounded-xl border border-dashed border-tinta/20 px-4 py-2.5 text-xs text-tinta/50">
+            Google Analytics todavía no está configurado. Completá{' '}
+            <code className="rounded bg-tinta/5 px-1">
+              NEXT_PUBLIC_GA_MEASUREMENT_ID
+            </code>{' '}
+            para habilitarlo.
+          </p>
+        )}
       </div>
 
       {/* Resumen de pedidos */}

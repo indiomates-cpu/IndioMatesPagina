@@ -2,6 +2,7 @@ import { Header } from '@/components/layout/Header';
 import { Footer } from '@/components/layout/Footer';
 import { CartDrawer } from '@/components/cart/CartDrawer';
 import { MateLoader } from '@/components/mate/MateLoader';
+import { GoogleAnalytics } from '@/components/analytics/GoogleAnalytics';
 
 // La tienda consulta la base en cada request, así que se renderiza dinámica.
 export const dynamic = 'force-dynamic';
@@ -13,6 +14,7 @@ export default function TiendaLayout({
 }) {
   return (
     <>
+      <GoogleAnalytics />
       <MateLoader />
       <Header />
       <CartDrawer />
