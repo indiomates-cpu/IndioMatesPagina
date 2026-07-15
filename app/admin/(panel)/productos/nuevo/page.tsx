@@ -1,11 +1,15 @@
 import Link from 'next/link';
 import { obtenerCategorias } from '@/lib/queries';
+import { contarDestacados } from '@/lib/producto-input';
 import { ProductoForm } from '@/components/admin/ProductoForm';
 
 export const dynamic = 'force-dynamic';
 
 export default async function NuevoProductoPage() {
-  const categorias = await obtenerCategorias();
+  const [categorias, cantidadDestacadosOtros] = await Promise.all([
+    obtenerCategorias(),
+    contarDestacados(),
+  ]);
 
   return (
     <div className="mx-auto max-w-5xl">
@@ -29,7 +33,10 @@ export default async function NuevoProductoPage() {
           .
         </div>
       ) : (
-        <ProductoForm categorias={categorias} />
+        <ProductoForm
+          categorias={categorias}
+          cantidadDestacadosOtros={cantidadDestacadosOtros}
+        />
       )}
     </div>
   );

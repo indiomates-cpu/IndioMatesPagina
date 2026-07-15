@@ -2,7 +2,11 @@ import { NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
 import { requireAdmin } from '@/lib/session';
 import { serializarProducto } from '@/lib/serialize';
-import { parsearBodyProducto } from '@/lib/producto-input';
+import {
+  parsearBodyProducto,
+  contarDestacados,
+  MAX_DESTACADOS,
+} from '@/lib/producto-input';
 
 type Ctx = { params: Promise<{ id: string }> };
 
@@ -34,7 +38,7 @@ export async function PUT(request: Request, { params }: Ctx) {
 
   const { id } = await params;
   const body = await request.json().catch(() => ({}));
-  const parsed = await parsearBodyProducto(body);
+  const parsed = await parsearBodyProducto(body, { productoIdActual: id });
   if ('error' in parsed) {
     return NextResponse.json({ error: parsed.error }, { status: 400 });
   }
@@ -78,8 +82,9 @@ export async function PUT(request: Request, { params }: Ctx) {
   }
 }
 
-// PATCH /api/admin/productos/[id] -> actualización parcial (baja lógica y
-// edición rápida de stock desde el listado). Body: { activo?, stock? }
+// PATCH /api/admin/productos/[id] -> actualización parcial (baja lógica,
+// destacado y edición rápida de stock desde el listado).
+// Body: { activo?, destacado?, stock? }
 export async function PATCH(request: Request, { params }: Ctx) {
   const { error } = await requireAdmin();
   if (error) return error;
@@ -87,8 +92,22 @@ export async function PATCH(request: Request, { params }: Ctx) {
   const { id } = await params;
   const body = await request.json().catch(() => ({}));
 
-  const data: { activo?: boolean; stock?: number } = {};
+  const data: { activo?: boolean; destacado?: boolean; stock?: number } = {};
   if (typeof body.activo === 'boolean') data.activo = body.activo;
+  if (typeof body.destacado === 'boolean') {
+    if (body.destacado) {
+      const cantidad = await contarDestacados(id);
+      if (cantidad >= MAX_DESTACADOS) {
+        return NextResponse.json(
+          {
+            error: `Ya hay ${MAX_DESTACADOS} productos destacados. Quitá uno antes de agregar otro.`,
+          },
+          { status: 409 }
+        );
+      }
+    }
+    data.destacado = body.destacado;
+  }
   if (body.stock !== undefined) {
     const stock = Math.trunc(Number(body.stock));
     if (!Number.isFinite(stock) || stock < 0) {

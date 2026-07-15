@@ -26,6 +26,8 @@ export interface ProductoDTO {
   precioOriginal?: number;
   stock: number;
   activo: boolean;
+  // Si está marcado, el producto aparece en "Destacados" de la home (máx. 8).
+  destacado: boolean;
   categoriaId: string;
   categoria?: CategoriaDTO;
   imagenes: ImagenDTO[];

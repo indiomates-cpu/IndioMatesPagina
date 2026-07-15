@@ -34,6 +34,7 @@ model Producto {
   precioOriginal Decimal? // precio "antes" del descuento; si es mayor a `precio`, se muestra tachado con el % de descuento
   stock          Int              @default(0)
   activo         Boolean          @default(true) // visible/oculto en el catálogo
+  destacado      Boolean          @default(false) // se muestra en "Destacados" de la home (máx. 8)
   categoriaId    String
   categoria      Categoria        @relation(fields: [categoriaId], references: [id])
   imagenes       ImagenProducto[]

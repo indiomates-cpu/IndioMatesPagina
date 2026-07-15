@@ -134,12 +134,12 @@ export async function obtenerProductoPorSlug(
   );
 }
 
-// Productos destacados para la home (los más recientes con stock).
+// Productos que el admin marcó como destacados, para la home (máx. 8).
 export async function obtenerDestacados(limite = 8): Promise<ProductoDTO[]> {
   return seguro(
     async () => {
       const productos = await prisma.producto.findMany({
-        where: { activo: true, stock: { gt: 0 } },
+        where: { activo: true, destacado: true },
         include: {
           categoria: true,
           imagenes: { orderBy: { orden: 'asc' } },

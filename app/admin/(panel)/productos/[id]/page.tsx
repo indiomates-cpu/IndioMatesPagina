@@ -3,6 +3,7 @@ import { notFound } from 'next/navigation';
 import { prisma } from '@/lib/prisma';
 import { serializarProducto } from '@/lib/serialize';
 import { obtenerCategorias } from '@/lib/queries';
+import { contarDestacados } from '@/lib/producto-input';
 import { ProductoForm } from '@/components/admin/ProductoForm';
 
 export const dynamic = 'force-dynamic';
@@ -14,13 +15,15 @@ export default async function EditarProductoPage({
 }) {
   const { id } = await params;
 
-  const [productoRaw, categorias] = await Promise.all([
-    prisma.producto.findUnique({
-      where: { id },
-      include: { categoria: true, imagenes: { orderBy: { orden: 'asc' } } },
-    }),
-    obtenerCategorias(),
-  ]);
+  const [productoRaw, categorias, cantidadDestacadosOtros] =
+    await Promise.all([
+      prisma.producto.findUnique({
+        where: { id },
+        include: { categoria: true, imagenes: { orderBy: { orden: 'asc' } } },
+      }),
+      obtenerCategorias(),
+      contarDestacados(id),
+    ]);
 
   if (!productoRaw) notFound();
 
@@ -40,6 +43,7 @@ export default async function EditarProductoPage({
       <ProductoForm
         categorias={categorias}
         producto={serializarProducto(productoRaw)}
+        cantidadDestacadosOtros={cantidadDestacadosOtros}
       />
     </div>
   );

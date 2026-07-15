@@ -29,6 +29,11 @@ export function ProductosTabla({ inicial }: { inicial: ProductoDTO[] }) {
     );
   }, [productos, busqueda]);
 
+  const cantidadDestacados = useMemo(
+    () => productos.filter((p) => p.destacado).length,
+    [productos]
+  );
+
   async function patch(
     id: string,
     data: Record<string, unknown>
@@ -92,13 +97,25 @@ export function ProductosTabla({ inicial }: { inicial: ProductoDTO[] }) {
 
   return (
     <div>
-      <input
-        type="search"
-        placeholder="Buscar por nombre o categoría…"
-        value={busqueda}
-        onChange={(e) => setBusqueda(e.target.value)}
-        className="mb-4 w-full max-w-sm rounded-lg border border-tinta/15 bg-papel px-3 py-2 text-sm outline-none transition-[border-color,box-shadow] duration-300 focus:border-tinta focus:ring-4 focus:ring-tinta/5"
-      />
+      <div className="mb-4 flex flex-wrap items-center justify-between gap-3">
+        <input
+          type="search"
+          placeholder="Buscar por nombre o categoría…"
+          value={busqueda}
+          onChange={(e) => setBusqueda(e.target.value)}
+          className="w-full max-w-sm rounded-lg border border-tinta/15 bg-papel px-3 py-2 text-sm outline-none transition-[border-color,box-shadow] duration-300 focus:border-tinta focus:ring-4 focus:ring-tinta/5"
+        />
+        <span
+          className={cn(
+            'rounded-full border px-3 py-1 text-xs font-medium',
+            cantidadDestacados >= 8
+              ? 'border-tinta/20 bg-tinta/5 text-tinta/60'
+              : 'border-tinta/15 text-tinta/50'
+          )}
+        >
+          ★ {cantidadDestacados}/8 destacados
+        </span>
+      </div>
 
       {error && (
         <p className="mb-4 rounded-lg border border-red-200 bg-red-50 px-3 py-2 text-sm text-red-700">
@@ -107,13 +124,14 @@ export function ProductosTabla({ inicial }: { inicial: ProductoDTO[] }) {
       )}
 
       <div className="overflow-x-auto rounded-2xl border border-tinta/10 bg-papel">
-        <table className="w-full min-w-[720px] text-sm">
+        <table className="w-full min-w-[820px] text-sm">
           <thead className="border-b border-tinta/10 text-left text-xs uppercase tracking-wide text-tinta/50">
             <tr>
               <th className="p-3 font-medium">Producto</th>
               <th className="p-3 font-medium">Precio</th>
               <th className="p-3 font-medium">Stock</th>
               <th className="p-3 font-medium">Estado</th>
+              <th className="p-3 font-medium">Destacado</th>
               <th className="p-3 text-right font-medium">Acciones</th>
             </tr>
           </thead>
@@ -210,6 +228,29 @@ export function ProductosTabla({ inicial }: { inicial: ProductoDTO[] }) {
                       title={p.activo ? 'Click para dar de baja' : 'Click para activar'}
                     >
                       {p.activo ? 'Activo' : 'Inactivo'}
+                    </button>
+                  </td>
+                  <td className="p-3">
+                    <button
+                      onClick={() => patch(p.id, { destacado: !p.destacado })}
+                      disabled={
+                        cargando || (!p.destacado && cantidadDestacados >= 8)
+                      }
+                      className={cn(
+                        'rounded-full px-2.5 py-1 text-xs font-medium transition-all duration-300 ease-premium active:scale-90 disabled:cursor-not-allowed disabled:opacity-40',
+                        p.destacado
+                          ? 'bg-tinta text-papel'
+                          : 'border border-tinta/20 text-tinta/50 hover:border-tinta/50'
+                      )}
+                      title={
+                        p.destacado
+                          ? 'Click para quitar de destacados'
+                          : cantidadDestacados >= 8
+                            ? 'Ya hay 8 destacados: quitá uno primero'
+                            : 'Click para destacar'
+                      }
+                    >
+                      {p.destacado ? '★ Destacado' : '☆ Destacar'}
                     </button>
                   </td>
                   <td className="p-3">

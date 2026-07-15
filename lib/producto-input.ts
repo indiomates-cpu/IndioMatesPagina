@@ -1,6 +1,10 @@
 import { prisma } from './prisma';
 import { slugify } from './utils';
 
+// Cantidad máxima de productos que pueden estar marcados como destacados
+// al mismo tiempo (se muestran en la sección "Destacados" de la home).
+export const MAX_DESTACADOS = 8;
+
 export interface ImagenInput {
   url: string;
   orden?: number;
@@ -14,6 +18,7 @@ export interface DatosProducto {
   precioOriginal: number | null;
   stock: number;
   activo: boolean;
+  destacado: boolean;
   categoriaId: string;
   imagenes: ImagenInput[];
 }
@@ -22,9 +27,25 @@ type Resultado =
   | { data: DatosProducto; error?: undefined }
   | { error: string; data?: undefined };
 
+// Cuenta los productos destacados, excluyendo opcionalmente uno (el que se
+// está editando, para no contarse a sí mismo contra el límite).
+export async function contarDestacados(
+  excluirId?: string
+): Promise<number> {
+  return prisma.producto.count({
+    where: {
+      destacado: true,
+      ...(excluirId ? { id: { not: excluirId } } : {}),
+    },
+  });
+}
+
 // Valida y normaliza el body para crear/editar un producto.
+// `productoIdActual` se pasa al editar, para excluirse a sí mismo del
+// conteo del límite de destacados.
 export async function parsearBodyProducto(
-  body: Record<string, unknown>
+  body: Record<string, unknown>,
+  opciones?: { productoIdActual?: string }
 ): Promise<Resultado> {
   const nombre = typeof body.nombre === 'string' ? body.nombre.trim() : '';
   const descripcion =
@@ -35,6 +56,8 @@ export async function parsearBodyProducto(
   const precio = Number(body.precio);
   const stock = Math.trunc(Number(body.stock));
   const activo = body.activo === undefined ? true : Boolean(body.activo);
+  const destacado =
+    body.destacado === undefined ? false : Boolean(body.destacado);
 
   // Precio original (para descuento): opcional. Vacío/0/null -> sin descuento.
   const precioOriginalRaw = body.precioOriginal;
@@ -65,6 +88,17 @@ export async function parsearBodyProducto(
     }
   }
   if (!categoriaId) return { error: 'La categoría es obligatoria' };
+
+  // Límite de productos destacados: si se está marcando como destacado,
+  // verificar que no se supere el máximo (sin contarse a sí mismo).
+  if (destacado) {
+    const cantidad = await contarDestacados(opciones?.productoIdActual);
+    if (cantidad >= MAX_DESTACADOS) {
+      return {
+        error: `Ya hay ${MAX_DESTACADOS} productos destacados. Quitá uno antes de agregar otro.`,
+      };
+    }
+  }
 
   // Verificar que la categoría exista.
   const categoria = await prisma.categoria.findUnique({
@@ -105,6 +139,7 @@ export async function parsearBodyProducto(
       precioOriginal,
       stock,
       activo,
+      destacado,
       categoriaId,
       imagenes,
     },

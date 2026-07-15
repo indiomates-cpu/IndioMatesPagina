@@ -36,6 +36,7 @@ export function serializarProducto(p: ProductoConRelaciones): ProductoDTO {
       p.precioOriginal != null ? Number(p.precioOriginal) : undefined,
     stock: p.stock,
     activo: p.activo,
+    destacado: p.destacado,
     categoriaId: p.categoriaId,
     categoria: p.categoria ? serializarCategoria(p.categoria) : undefined,
     imagenes: (p.imagenes ?? [])

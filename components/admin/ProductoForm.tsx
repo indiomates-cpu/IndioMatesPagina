@@ -16,9 +16,13 @@ interface ImagenLocal {
 export function ProductoForm({
   categorias,
   producto,
+  cantidadDestacadosOtros = 0,
 }: {
   categorias: CategoriaDTO[];
   producto?: ProductoDTO;
+  // Cantidad de OTROS productos (no este) que ya están destacados, para
+  // saber si queda lugar dentro del máximo de 8.
+  cantidadDestacadosOtros?: number;
 }) {
   const router = useRouter();
   const esEdicion = Boolean(producto);
@@ -34,6 +38,9 @@ export function ProductoForm({
   );
   const [stock, setStock] = useState(producto ? String(producto.stock) : '0');
   const [activo, setActivo] = useState(producto?.activo ?? true);
+  const [destacado, setDestacado] = useState(producto?.destacado ?? false);
+  const limiteDestacadosAlcanzado =
+    !destacado && cantidadDestacadosOtros >= 8;
   const [categoriaId, setCategoriaId] = useState(
     producto?.categoriaId ?? categorias[0]?.id ?? ''
   );
@@ -120,6 +127,7 @@ export function ProductoForm({
       precioOriginal: precioOriginal.trim() ? Number(precioOriginal) : null,
       stock: Number(stock),
       activo,
+      destacado,
       categoriaId,
       imagenes: imagenes.map((img, i) => ({ url: img.url, orden: i })),
     };
@@ -380,6 +388,29 @@ export function ProductoForm({
           />
           Producto activo (visible en el catálogo)
         </label>
+
+        <div>
+          <label
+            className={cn(
+              'flex items-center gap-2.5 text-sm',
+              limiteDestacadosAlcanzado && 'cursor-not-allowed opacity-50'
+            )}
+          >
+            <input
+              type="checkbox"
+              checked={destacado}
+              disabled={limiteDestacadosAlcanzado}
+              onChange={(e) => setDestacado(e.target.checked)}
+              className="h-4 w-4 accent-tinta"
+            />
+            Destacado (aparece en la home)
+          </label>
+          <p className="mt-1 text-xs text-tinta/50">
+            {limiteDestacadosAlcanzado
+              ? `Ya hay 8 productos destacados. Quitá uno para poder marcar este.`
+              : `${cantidadDestacadosOtros + (destacado ? 1 : 0)}/8 destacados`}
+          </p>
+        </div>
 
         {error && (
           <p className="rounded-lg border border-red-200 bg-red-50 px-3 py-2 text-sm text-red-700">
