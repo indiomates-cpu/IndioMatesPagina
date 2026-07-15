@@ -3,7 +3,7 @@ import { cn } from '@/lib/utils';
 
 // Muestra el estado de stock según la lógica de negocio:
 //  - 0            -> "Sin stock"
-//  - 1..UMBRAL    -> "¡Últimas X unidades!" (destacado)
+//  - 1..UMBRAL    -> "¡Últimas X unidades!" / "¡Última unidad!" si X=1 (destacado)
 //  - > UMBRAL     -> "Stock: X unidades"
 export function StockBadge({
   stock,

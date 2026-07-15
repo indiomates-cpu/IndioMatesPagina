@@ -38,7 +38,7 @@ export function etiquetaStock(stock: number): string {
     case 'sin_stock':
       return 'Sin stock';
     case 'bajo':
-      return `¡Últimas ${stock} unidades!`;
+      return stock === 1 ? '¡Última unidad!' : `¡Últimas ${stock} unidades!`;
     default:
       return `Stock: ${stock} unidades`;
   }
