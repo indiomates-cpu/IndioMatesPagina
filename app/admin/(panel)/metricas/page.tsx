@@ -55,6 +55,15 @@ export default async function MetricasPage() {
   const maxVistas = masVistos[0]?.vistas ?? 1;
 
   const gaConfigurado = Boolean(process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID);
+  // Si tenemos el ID numérico de la propiedad, enlazamos directo a su reporte
+  // en tiempo real. Así, si el navegador tiene varias cuentas de Google
+  // logueadas y abre una que no es la correcta, Google muestra un aviso de
+  // "no tenés acceso" en vez de la home de otra cuenta al azar (mucho más
+  // claro que un link genérico a analytics.google.com).
+  const gaPropertyId = process.env.NEXT_PUBLIC_GA_PROPERTY_ID;
+  const gaHref = gaPropertyId
+    ? `https://analytics.google.com/analytics/web/#/p${gaPropertyId}/realtime/overview`
+    : 'https://analytics.google.com/';
 
   return (
     <div>
@@ -67,20 +76,27 @@ export default async function MetricasPage() {
         </div>
 
         {gaConfigurado ? (
-          <a
-            href="https://analytics.google.com/"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="elevable presionable flex items-center gap-2 rounded-xl border border-tinta/15 bg-papel px-4 py-2.5 text-sm font-medium"
-          >
-            <svg viewBox="0 0 24 24" className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-              <path d="M18 20V10M12 20V4M6 20v-6" />
-            </svg>
-            Ver Google Analytics
-            <svg viewBox="0 0 24 24" className="h-3.5 w-3.5" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-              <path d="M7 17 17 7M7 7h10v10" />
-            </svg>
-          </a>
+          <div className="flex flex-col items-end gap-1.5">
+            <a
+              href={gaHref}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="elevable presionable flex items-center gap-2 rounded-xl border border-tinta/15 bg-papel px-4 py-2.5 text-sm font-medium"
+            >
+              <svg viewBox="0 0 24 24" className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M18 20V10M12 20V4M6 20v-6" />
+              </svg>
+              Ver Google Analytics
+              <svg viewBox="0 0 24 24" className="h-3.5 w-3.5" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M7 17 17 7M7 7h10v10" />
+              </svg>
+            </a>
+            <p className="max-w-[220px] text-right text-[11px] leading-snug text-tinta/40">
+              ¿Se abre con la cuenta de Google equivocada? Cambiala desde el
+              ícono de tu perfil, arriba a la derecha, en la página de
+              Analytics.
+            </p>
+          </div>
         ) : (
           <p className="max-w-xs rounded-xl border border-dashed border-tinta/20 px-4 py-2.5 text-xs text-tinta/50">
             Google Analytics todavía no está configurado. Completá{' '}
