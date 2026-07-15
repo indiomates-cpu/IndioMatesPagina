@@ -9,7 +9,6 @@ import { QuantityStepper } from '@/components/cart/QuantityStepper';
 
 export function AddToCartSection({ producto }: { producto: ProductoDTO }) {
   const agregar = useCarrito((e) => e.agregar);
-  const abrir = useCarrito((e) => e.abrir);
   const [cantidad, setCantidad] = useState(1);
 
   // Feedback breve de "agregado" en el botón.
@@ -22,7 +21,6 @@ export function AddToCartSection({ producto }: { producto: ProductoDTO }) {
   function handleAgregar() {
     if (sinStock) return;
     agregar(producto, cantidad);
-    abrir();
     setAgregado(true);
     window.clearTimeout(timerRef.current);
     timerRef.current = window.setTimeout(() => setAgregado(false), 1400);

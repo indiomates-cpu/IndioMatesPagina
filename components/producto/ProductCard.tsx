@@ -20,7 +20,6 @@ export function ProductCard({
   indice?: number;
 }) {
   const agregar = useCarrito((e) => e.agregar);
-  const abrir = useCarrito((e) => e.abrir);
 
   // Feedback breve de "agregado" en el botón.
   const [agregado, setAgregado] = useState(false);
@@ -38,7 +37,6 @@ export function ProductCard({
     e.preventDefault();
     if (sinStock) return;
     agregar(producto, 1);
-    abrir();
     setAgregado(true);
     window.clearTimeout(timerRef.current);
     timerRef.current = window.setTimeout(() => setAgregado(false), 1400);
