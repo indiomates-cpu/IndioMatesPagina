@@ -67,14 +67,12 @@ export function ProductCard({
               sinStock ? 'opacity-60 grayscale' : ''
             }`}
           />
-          <div className="absolute left-3 top-3">
+          {/* Badges apilados arriba a la izquierda para que el descuento no
+              choque con el de stock en las tarjetas angostas de mobile. */}
+          <div className="absolute left-3 top-3 flex flex-col items-start gap-1.5">
             <StockBadge stock={producto.stock} />
+            {descuento !== null && <DiscountBadge porcentaje={descuento} />}
           </div>
-          {descuento !== null && (
-            <div className="absolute right-3 top-3">
-              <DiscountBadge porcentaje={descuento} />
-            </div>
-          )}
         </div>
       </Link>
 
