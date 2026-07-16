@@ -12,8 +12,15 @@ import {
 } from 'framer-motion';
 import { NOMBRE_NEGOCIO } from '@/lib/constants';
 import { CartIcon } from '@/components/cart/CartIcon';
-import { RESORTE_SUAVE, listaEscalonada, itemLista } from '@/lib/motion';
+import { RESORTE_SUAVE } from '@/lib/motion';
 import { cn } from '@/lib/utils';
+
+const ENLACES = [
+  { href: '/', etiqueta: 'Inicio', exacto: true },
+  { href: '/productos', etiqueta: 'Productos', exacto: false },
+  { href: '/quienes-somos', etiqueta: 'Quiénes somos', exacto: true },
+  { href: '/soporte', etiqueta: 'Soporte', exacto: true },
+];
 
 export function Header() {
   const [menuAbierto, setMenuAbierto] = useState(false);
@@ -27,7 +34,11 @@ export function Header() {
   const linkDesktop =
     'enlace-subrayado text-sm font-medium transition-colors duration-300';
 
+  const estaActivo = (e: (typeof ENLACES)[number]) =>
+    e.exacto ? pathname === e.href : pathname.startsWith(e.href);
+
   return (
+    <>
     <header
       className={cn(
         'sticky top-0 z-30 border-b border-tinta/10 bg-papel/85 backdrop-blur-md transition-shadow duration-500',
@@ -57,52 +68,21 @@ export function Header() {
 
         {/* Navegación desktop */}
         <nav className="hidden items-center gap-6 md:flex">
-          <Link
-            href="/"
-            data-activo={pathname === '/'}
-            className={cn(
-              linkDesktop,
-              pathname === '/' ? 'text-tinta' : 'text-tinta/70 hover:text-tinta'
-            )}
-          >
-            Inicio
-          </Link>
-          <Link
-            href="/productos"
-            data-activo={pathname.startsWith('/productos')}
-            className={cn(
-              linkDesktop,
-              pathname.startsWith('/productos')
-                ? 'text-tinta'
-                : 'text-tinta/70 hover:text-tinta'
-            )}
-          >
-            Productos
-          </Link>
-          <Link
-            href="/quienes-somos"
-            data-activo={pathname === '/quienes-somos'}
-            className={cn(
-              linkDesktop,
-              pathname === '/quienes-somos'
-                ? 'text-tinta'
-                : 'text-tinta/70 hover:text-tinta'
-            )}
-          >
-            Quiénes somos
-          </Link>
-          <Link
-            href="/soporte"
-            data-activo={pathname === '/soporte'}
-            className={cn(
-              linkDesktop,
-              pathname === '/soporte'
-                ? 'text-tinta'
-                : 'text-tinta/70 hover:text-tinta'
-            )}
-          >
-            Soporte
-          </Link>
+          {ENLACES.map((e) => (
+            <Link
+              key={e.href}
+              href={e.href}
+              data-activo={estaActivo(e)}
+              className={cn(
+                linkDesktop,
+                estaActivo(e)
+                  ? 'text-tinta'
+                  : 'text-tinta/70 hover:text-tinta'
+              )}
+            >
+              {e.etiqueta}
+            </Link>
+          ))}
         </nav>
 
         <div className="flex items-center gap-2">
@@ -139,63 +119,78 @@ export function Header() {
         </div>
       </div>
 
-      {/* Menú mobile desplegable con entrada escalonada */}
-      <AnimatePresence>
-        {menuAbierto && (
-          <motion.nav
-            initial={{ height: 0, opacity: 0 }}
-            animate={{ height: 'auto', opacity: 1 }}
-            exit={{ height: 0, opacity: 0 }}
-            transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
-            className="overflow-hidden border-t border-tinta/10 md:hidden"
-          >
-            <motion.div
-              className="flex flex-col gap-1 px-4 py-3"
-              variants={listaEscalonada}
-              initial="oculto"
-              animate="visible"
-            >
-              <motion.div variants={itemLista}>
-                <Link
-                  href="/"
-                  onClick={() => setMenuAbierto(false)}
-                  className="presionable block rounded-lg px-3 py-2.5 text-sm font-medium hover:bg-tinta/5"
-                >
-                  Inicio
-                </Link>
-              </motion.div>
-              <motion.div variants={itemLista}>
-                <Link
-                  href="/productos"
-                  onClick={() => setMenuAbierto(false)}
-                  className="presionable block rounded-lg px-3 py-2.5 text-sm font-medium hover:bg-tinta/5"
-                >
-                  Todos los productos
-                </Link>
-              </motion.div>
-              <motion.div variants={itemLista} className="my-1 h-px bg-tinta/10" />
-              <motion.div variants={itemLista}>
-                <Link
-                  href="/quienes-somos"
-                  onClick={() => setMenuAbierto(false)}
-                  className="presionable block rounded-lg px-3 py-2.5 text-sm text-tinta/70 hover:bg-tinta/5"
-                >
-                  Quiénes somos
-                </Link>
-              </motion.div>
-              <motion.div variants={itemLista}>
-                <Link
-                  href="/soporte"
-                  onClick={() => setMenuAbierto(false)}
-                  className="presionable block rounded-lg px-3 py-2.5 text-sm text-tinta/70 hover:bg-tinta/5"
-                >
-                  Soporte
-                </Link>
-              </motion.div>
-            </motion.div>
-          </motion.nav>
-        )}
-      </AnimatePresence>
     </header>
+
+    {/* Menú mobile: drawer lateral (como el carrito). Va FUERA del header
+        porque su backdrop-blur crea un containing block que rompería el
+        position:fixed del panel. */}
+    <AnimatePresence>
+      {menuAbierto && (
+        <>
+          {/* Fondo oscuro (entra por CSS, sale con framer). */}
+          <motion.div
+            className="menu-fondo-entra fixed inset-0 z-40 bg-tinta/50 backdrop-blur-sm md:hidden"
+            initial={false}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.3 }}
+            onClick={() => setMenuAbierto(false)}
+          />
+
+          {/* Panel lateral (entra por CSS, sale con framer). */}
+          <motion.aside
+            className="menu-panel-entra fixed right-0 top-0 z-50 flex h-full w-[78vw] max-w-xs flex-col bg-papel shadow-2xl md:hidden"
+            initial={false}
+            exit={{
+              x: '100%',
+              transition: { duration: 0.28, ease: [0.4, 0, 1, 1] },
+            }}
+            role="dialog"
+            aria-label="Menú de navegación"
+          >
+            <div className="flex items-center justify-between border-b border-tinta/10 px-5 py-4">
+              <span className="font-display text-lg font-semibold">Menú</span>
+              <button
+                onClick={() => setMenuAbierto(false)}
+                aria-label="Cerrar menú"
+                className="rounded-full p-1.5 transition-all duration-300 ease-premium hover:rotate-90 hover:bg-tinta/5 active:scale-90"
+              >
+                <svg viewBox="0 0 24 24" className="h-5 w-5" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
+                  <path d="M18 6 6 18M6 6l12 12" />
+                </svg>
+              </button>
+            </div>
+
+            <nav className="flex flex-col gap-1 p-4">
+              {ENLACES.map((e, i) => (
+                <div
+                  key={e.href}
+                  className="animate-entrada"
+                  style={{ animationDelay: `${100 + i * 60}ms` }}
+                >
+                  <Link
+                    href={e.href}
+                    onClick={() => setMenuAbierto(false)}
+                    className={cn(
+                      'presionable block rounded-lg px-4 py-3 text-base font-medium',
+                      estaActivo(e)
+                        ? 'bg-tinta/5 text-tinta'
+                        : 'text-tinta/70 hover:bg-tinta/5 hover:text-tinta'
+                    )}
+                  >
+                    {e.etiqueta}
+                  </Link>
+                </div>
+              ))}
+            </nav>
+
+            {/* Marca al pie del panel */}
+            <div className="mt-auto border-t border-tinta/10 px-5 py-4 text-xs uppercase tracking-[0.25em] text-tinta/40">
+              {NOMBRE_NEGOCIO}
+            </div>
+          </motion.aside>
+        </>
+      )}
+    </AnimatePresence>
+    </>
   );
 }

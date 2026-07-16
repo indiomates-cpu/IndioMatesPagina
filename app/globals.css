@@ -291,6 +291,33 @@ body {
   animation: ml-titilar 2.8s ease-in-out infinite;
 }
 
+/* ---- Drawer del menú mobile ---- */
+/* Entradas por CSS (las de montaje de framer no son confiables en este
+   stack); la salida sí la maneja framer. fill backwards y no forwards, para
+   que al terminar no pisen el transform inline del exit. */
+@keyframes menu-fondo {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+.menu-fondo-entra {
+  animation: menu-fondo 0.3s ease-out backwards;
+}
+@keyframes menu-panel {
+  from {
+    transform: translateX(100%);
+  }
+  to {
+    transform: translateX(0);
+  }
+}
+.menu-panel-entra {
+  animation: menu-panel 0.38s cubic-bezier(0.22, 1, 0.36, 1) backwards;
+}
+
 /* Respeta a quienes prefieren menos movimiento. */
 @media (prefers-reduced-motion: reduce) {
   *,
