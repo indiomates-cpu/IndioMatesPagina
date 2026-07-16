@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import { AnimatePresence, motion, useReducedMotion } from 'framer-motion';
-import { MateIcono } from './MateIcono';
+import { MateLlenado } from './MateLlenado';
 import { NOMBRE_NEGOCIO } from '@/lib/constants';
 
 // Loader inicial breve con temática matera. Se muestra una sola vez por sesión
@@ -11,8 +11,8 @@ import { NOMBRE_NEGOCIO } from '@/lib/constants';
 // Las animaciones de ENTRADA van por CSS (siempre corren, a diferencia de las
 // de montaje de framer, que no son confiables en este stack). framer se usa
 // sólo para el fundido de SALIDA (presencia), que sí funciona.
-const DURACION_MS = 1600;
-const DURACION_REDUCIDA_MS = 800;
+const DURACION_MS = 2100;
+const DURACION_REDUCIDA_MS = 900;
 
 export function MateLoader() {
   // Arranca en `true` para que el SSR ya renderice el loader y cubra la
@@ -75,26 +75,13 @@ export function MateLoader() {
           exit={{ opacity: 0 }}
           transition={{ duration: 0.5, ease: 'easeInOut' }}
         >
-          <div className="relative flex flex-col items-center">
-            {/* Vapor */}
-            <div className="absolute -top-6 left-1/2 flex -translate-x-1/2 gap-1.5">
-              {[0, 1, 2].map((i) => (
-                <span
-                  key={i}
-                  className="block h-6 w-1 rounded-full bg-papel/70 blur-[1px] animate-vapor"
-                  style={{ animationDelay: `${i * 0.35}s` }}
-                />
-              ))}
-            </div>
-
-            {/* Mate (estático, con una entrada de escala por CSS) */}
-            <div className="animate-aparecer" style={{ animationDuration: '0.6s' }}>
-              <MateIcono className="h-20 w-20 sm:h-24 sm:w-24" />
-            </div>
+          <div className="ml-escena flex flex-col items-center">
+            {/* El termo llena el mate (con el logo) de agua. */}
+            <MateLlenado className="h-60 w-60 sm:h-72 sm:w-72" />
 
             <p
-              className="animate-entrada mt-7 font-display text-lg uppercase tracking-[0.3em] sm:text-xl"
-              style={{ animationDelay: '150ms' }}
+              className="animate-entrada -mt-2 font-display text-lg uppercase tracking-[0.3em] sm:text-xl"
+              style={{ animationDelay: '400ms' }}
             >
               {NOMBRE_NEGOCIO}
             </p>
@@ -102,7 +89,7 @@ export function MateLoader() {
             {/* Línea que se extiende */}
             <span
               className="mt-4 block h-px animate-crecer bg-papel/40"
-              style={{ width: 120, transformOrigin: 'center', animationDelay: '250ms' }}
+              style={{ width: 120, transformOrigin: 'center', animationDelay: '550ms' }}
             />
           </div>
         </motion.div>

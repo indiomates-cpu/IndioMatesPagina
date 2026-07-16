@@ -122,6 +122,80 @@ body {
   display: none !important;
 }
 
+/* ---- Loader: el termo llena el mate de agua ---- */
+/* Aparición de toda la escena. */
+@keyframes ml-escena {
+  from {
+    opacity: 0;
+    transform: translateY(10px) scale(0.94);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+/* Termo: se inclina para verter y vuelve. */
+@keyframes ml-verter {
+  0%,
+  100% {
+    transform: rotate(0deg);
+  }
+  35%,
+  78% {
+    transform: rotate(-7deg);
+  }
+}
+/* Chorro de agua: aparece durante el vertido. */
+@keyframes ml-chorro {
+  0%,
+  22% {
+    opacity: 0;
+    transform: scaleY(0.15);
+  }
+  32%,
+  80% {
+    opacity: 1;
+    transform: scaleY(1);
+  }
+  92%,
+  100% {
+    opacity: 0;
+    transform: scaleY(1);
+  }
+}
+/* Agua que sube dentro del mate (usar con transform-origin: bottom). */
+@keyframes ml-llenar {
+  0%,
+  26% {
+    transform: scaleY(0);
+  }
+  86%,
+  100% {
+    transform: scaleY(1);
+  }
+}
+.ml-escena {
+  animation: ml-escena 0.6s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+.ml-verter {
+  transform-box: fill-box;
+  transform-origin: 50% 100%;
+  animation: ml-verter 2s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+.ml-chorro {
+  transform-box: fill-box;
+  transform-origin: 50% 0%;
+  animation: ml-chorro 2s ease-in-out both;
+}
+.ml-agua {
+  transform-box: fill-box;
+  transform-origin: 50% 100%;
+  animation: ml-llenar 2s cubic-bezier(0.33, 0.66, 0.4, 1) both;
+}
+.ml-superficie {
+  animation: ml-superficie 2s ease-out both;
+}
+
 /* Respeta a quienes prefieren menos movimiento. */
 @media (prefers-reduced-motion: reduce) {
   *,
