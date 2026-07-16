@@ -70,17 +70,22 @@ export function MateLoader() {
           role="status"
           aria-label={`Cargando ${NOMBRE_NEGOCIO}`}
           onClick={cerrar}
-          className="mate-loader fixed inset-0 z-[100] flex flex-col items-center justify-center overflow-hidden bg-tinta text-papel"
+          className="mate-loader fixed inset-0 z-[100] flex flex-col items-center justify-center overflow-hidden bg-[#f4f4f2] text-tinta"
+          style={{
+            backgroundImage:
+              'linear-gradient(rgb(10 10 10 / 0.045) 1px, transparent 1px), linear-gradient(90deg, rgb(10 10 10 / 0.045) 1px, transparent 1px)',
+            backgroundSize: '48px 48px',
+          }}
           initial={{ opacity: 1 }}
           exit={{ opacity: 0 }}
           transition={{ duration: 0.5, ease: 'easeInOut' }}
         >
-          <div className="ml-escena flex flex-col items-center">
-            {/* El termo llena el mate (con el logo) de agua. */}
-            <MateLlenado className="h-60 w-60 sm:h-72 sm:w-72" />
+          <div className="ml-escena flex w-full flex-col items-center">
+            {/* El termo ceba el mate, con la yerba de la marca al lado. */}
+            <MateLlenado className="w-[min(94vw,660px)]" />
 
             <p
-              className="animate-entrada -mt-2 font-display text-lg uppercase tracking-[0.3em] sm:text-xl"
+              className="animate-entrada mt-3 font-display text-lg uppercase tracking-[0.3em] sm:text-xl"
               style={{ animationDelay: '400ms' }}
             >
               {NOMBRE_NEGOCIO}
@@ -88,7 +93,7 @@ export function MateLoader() {
 
             {/* Línea que se extiende */}
             <span
-              className="mt-4 block h-px animate-crecer bg-papel/40"
+              className="mt-4 block h-px animate-crecer bg-tinta/30"
               style={{ width: 120, transformOrigin: 'center', animationDelay: '550ms' }}
             />
           </div>

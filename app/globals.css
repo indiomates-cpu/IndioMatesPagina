@@ -167,17 +167,6 @@ body {
     stroke-dashoffset: 0;
   }
 }
-/* Agua que sube dentro del mate (usar con transform-origin: bottom). */
-@keyframes ml-llenar {
-  0%,
-  26% {
-    transform: scaleY(0);
-  }
-  86%,
-  100% {
-    transform: scaleY(1);
-  }
-}
 .ml-escena {
   animation: ml-escena 0.6s cubic-bezier(0.22, 1, 0.36, 1) both;
 }
@@ -189,11 +178,6 @@ body {
 .ml-chorro {
   stroke-dasharray: 100;
   animation: ml-chorro 2s ease-in-out both;
-}
-.ml-agua {
-  transform-box: fill-box;
-  transform-origin: 50% 100%;
-  animation: ml-llenar 2s cubic-bezier(0.33, 0.66, 0.4, 1) both;
 }
 
 /* Respeta a quienes prefieren menos movimiento. */
