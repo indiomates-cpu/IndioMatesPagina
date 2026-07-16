@@ -64,8 +64,9 @@ export default async function PanelLayout({
         </div>
       </aside>
 
-      {/* Contenido */}
-      <div className="p-4 sm:p-6 lg:p-8">{children}</div>
+      {/* Contenido (min-w-0: la columna 1fr no debe crecer más que el
+          viewport aunque adentro haya tablas o textos sin corte). */}
+      <div className="min-w-0 p-4 sm:p-6 lg:p-8">{children}</div>
     </div>
   );
 }

@@ -168,8 +168,9 @@ export function CategoriaManager({ inicial }: { inicial: CategoriaAdmin[] }) {
 
   return (
     <div className="grid gap-8 lg:grid-cols-[1fr_320px]">
-      {/* Lista */}
-      <div>
+      {/* Lista (min-w-0: permite que el ítem de grid se achique y el texto
+          con truncate corte, en vez de desbordar la página en mobile). */}
+      <div className="min-w-0">
         {error && (
           <p className="mb-4 rounded-lg border border-red-200 bg-red-50 px-3 py-2 text-sm text-red-700">
             {error}
