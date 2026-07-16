@@ -146,25 +146,108 @@ body {
   }
 }
 /* Chorro de agua: se "dibuja" curvo desde el pico (stroke-dash) y luego se
-   corta. Requiere pathLength="100" en el path. */
+   corta. Requiere pathLength="100" en el path. Arranca cuando el termo ya
+   terminó de entrar (~32%). */
 @keyframes ml-chorro {
   0%,
-  20% {
+  30% {
     opacity: 0;
     stroke-dashoffset: 100;
   }
-  32% {
+  40% {
     opacity: 1;
   }
-  44%,
-  80% {
+  52%,
+  84% {
     opacity: 1;
     stroke-dashoffset: 0;
   }
-  93%,
+  94%,
   100% {
     opacity: 0;
     stroke-dashoffset: 0;
+  }
+}
+/* Entradas escalonadas de la escena. */
+@keyframes ml-mate-entra {
+  from {
+    opacity: 0;
+    transform: translateY(26px) scale(0.82);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+@keyframes ml-bolsa-entra {
+  from {
+    opacity: 0;
+    transform: translateX(46px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+@keyframes ml-termo-entra {
+  from {
+    opacity: 0;
+    transform: translate(-42px, -30px) rotate(-9deg);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+/* Gotas que salpican donde cae el chorro. */
+@keyframes ml-gota {
+  0% {
+    opacity: 0;
+    transform: translateY(0);
+  }
+  30% {
+    opacity: 0.9;
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(-13px);
+  }
+}
+/* Vapor que sube del mate. */
+@keyframes ml-vapor {
+  0% {
+    opacity: 0;
+    transform: translateY(5px);
+  }
+  35% {
+    opacity: 0.6;
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(-14px);
+  }
+}
+/* Fondo patrio: giro lento, flote y titileo. */
+@keyframes ml-girar {
+  to {
+    transform: rotate(360deg);
+  }
+}
+@keyframes ml-flotar {
+  from {
+    transform: translateY(-7px);
+  }
+  to {
+    transform: translateY(7px);
+  }
+}
+@keyframes ml-titilar {
+  0%,
+  100% {
+    opacity: 0.08;
+  }
+  50% {
+    opacity: 0.42;
   }
 }
 .ml-escena {
@@ -173,11 +256,44 @@ body {
 .ml-verter {
   transform-box: fill-box;
   transform-origin: 50% 100%;
-  animation: ml-verter 2s cubic-bezier(0.22, 1, 0.36, 1) both;
+  animation: ml-verter 2.2s cubic-bezier(0.22, 1, 0.36, 1) both;
 }
 .ml-chorro {
   stroke-dasharray: 100;
-  animation: ml-chorro 2s ease-in-out both;
+  animation: ml-chorro 2.2s ease-in-out both;
+}
+.ml-mate-entra {
+  transform-box: fill-box;
+  transform-origin: 50% 100%;
+  animation: ml-mate-entra 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) 0.12s both;
+}
+.ml-bolsa-entra {
+  transform-box: fill-box;
+  animation: ml-bolsa-entra 0.6s cubic-bezier(0.22, 1, 0.36, 1) 0.28s both;
+}
+.ml-termo-entra {
+  transform-box: fill-box;
+  animation: ml-termo-entra 0.65s cubic-bezier(0.22, 1, 0.36, 1) 0.05s both;
+}
+.ml-gota {
+  transform-box: fill-box;
+  animation: ml-gota 0.9s ease-out infinite both;
+}
+.ml-vapor {
+  transform-box: fill-box;
+  animation: ml-vapor 1.9s ease-out infinite both;
+}
+.ml-girar {
+  transform-box: fill-box;
+  transform-origin: 50% 50%;
+  animation: ml-girar 30s linear infinite;
+}
+.ml-flotar {
+  transform-box: fill-box;
+  animation: ml-flotar 4.5s ease-in-out infinite alternate;
+}
+.ml-titilar {
+  animation: ml-titilar 2.8s ease-in-out infinite;
 }
 
 /* Respeta a quienes prefieren menos movimiento. */

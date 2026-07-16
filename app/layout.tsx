@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from 'next';
-import { Inter, Space_Grotesk } from 'next/font/google';
+import { Inter, Space_Grotesk, Playfair_Display } from 'next/font/google';
 import './globals.css';
 import { NOMBRE_NEGOCIO } from '@/lib/constants';
 import { ProveedorMotion } from '@/components/ui/ProveedorMotion';
@@ -13,6 +13,13 @@ const inter = Inter({
 const spaceGrotesk = Space_Grotesk({
   subsets: ['latin'],
   variable: '--font-display',
+  display: 'swap',
+});
+
+// Serif elegante para la marca en el loader (combina con el logo IM).
+const playfair = Playfair_Display({
+  subsets: ['latin'],
+  variable: '--font-marca',
   display: 'swap',
 });
 
@@ -37,7 +44,10 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="es" className={`${inter.variable} ${spaceGrotesk.variable}`}>
+    <html
+      lang="es"
+      className={`${inter.variable} ${spaceGrotesk.variable} ${playfair.variable}`}
+    >
       <body className="min-h-screen bg-papel font-sans text-tinta antialiased">
         {/* Se ejecuta antes del primer pintado: si el loader ya se mostró en
             esta sesión, lo oculta al instante (evita ver un frame del sitio

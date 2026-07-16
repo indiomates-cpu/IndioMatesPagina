@@ -22,6 +22,7 @@ const config: Config = {
       fontFamily: {
         sans: ['var(--font-sans)', 'system-ui', 'sans-serif'],
         display: ['var(--font-display)', 'var(--font-sans)', 'sans-serif'],
+        marca: ['var(--font-marca)', 'Georgia', 'serif'],
       },
       transitionTimingFunction: {
         // Curva "premium": arranque rápido y frenado suave. Es la misma que

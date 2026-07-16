@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react';
 import { AnimatePresence, motion, useReducedMotion } from 'framer-motion';
 import { MateLlenado } from './MateLlenado';
+import { SimbolosPatrios } from './SimbolosPatrios';
 import { NOMBRE_NEGOCIO } from '@/lib/constants';
 
 // Loader inicial breve con temática matera. Se muestra una sola vez por sesión
@@ -11,7 +12,7 @@ import { NOMBRE_NEGOCIO } from '@/lib/constants';
 // Las animaciones de ENTRADA van por CSS (siempre corren, a diferencia de las
 // de montaje de framer, que no son confiables en este stack). framer se usa
 // sólo para el fundido de SALIDA (presencia), que sí funciona.
-const DURACION_MS = 2100;
+const DURACION_MS = 2400;
 const DURACION_REDUCIDA_MS = 900;
 
 export function MateLoader() {
@@ -70,31 +71,29 @@ export function MateLoader() {
           role="status"
           aria-label={`Cargando ${NOMBRE_NEGOCIO}`}
           onClick={cerrar}
-          className="mate-loader fixed inset-0 z-[100] flex flex-col items-center justify-center overflow-hidden bg-[#f4f4f2] text-tinta"
-          style={{
-            backgroundImage:
-              'linear-gradient(rgb(10 10 10 / 0.045) 1px, transparent 1px), linear-gradient(90deg, rgb(10 10 10 / 0.045) 1px, transparent 1px)',
-            backgroundSize: '48px 48px',
-          }}
+          className="mate-loader fixed inset-0 z-[100] flex flex-col items-center justify-center overflow-hidden bg-tinta text-papel"
           initial={{ opacity: 1 }}
           exit={{ opacity: 0 }}
           transition={{ duration: 0.5, ease: 'easeInOut' }}
         >
-          <div className="ml-escena flex w-full flex-col items-center">
+          {/* Fondo: símbolos patrios argentinos en blanco y celeste. */}
+          <SimbolosPatrios />
+
+          <div className="ml-escena relative flex w-full flex-col items-center">
             {/* El termo ceba el mate, con la yerba de la marca al lado. */}
             <MateLlenado className="w-[min(94vw,660px)]" />
 
             <p
-              className="animate-entrada mt-3 font-display text-lg uppercase tracking-[0.3em] sm:text-xl"
-              style={{ animationDelay: '400ms' }}
+              className="animate-entrada mt-3 font-marca text-2xl uppercase tracking-[0.32em] sm:text-3xl"
+              style={{ animationDelay: '500ms' }}
             >
               {NOMBRE_NEGOCIO}
             </p>
 
             {/* Línea que se extiende */}
             <span
-              className="mt-4 block h-px animate-crecer bg-tinta/30"
-              style={{ width: 120, transformOrigin: 'center', animationDelay: '550ms' }}
+              className="mt-4 block h-px animate-crecer bg-papel/40"
+              style={{ width: 150, transformOrigin: 'center', animationDelay: '650ms' }}
             />
           </div>
         </motion.div>
