@@ -239,8 +239,8 @@ export function ProductosTabla({ inicial }: { inicial: ProductoDTO[] }) {
                       className={cn(
                         'rounded-full px-2.5 py-1 text-xs font-medium transition-all duration-300 ease-premium active:scale-90 disabled:cursor-not-allowed disabled:opacity-40',
                         p.destacado
-                          ? 'bg-tinta text-papel'
-                          : 'border border-tinta/20 text-tinta/50 hover:border-tinta/50'
+                          ? 'border border-amber-400 bg-amber-400 text-tinta shadow-sm'
+                          : 'border border-tinta/20 text-tinta/50 hover:border-amber-400 hover:text-amber-600'
                       )}
                       title={
                         p.destacado
