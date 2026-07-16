@@ -26,17 +26,19 @@ const ESCENAS = {
     termo: { translate: '225 105', rotate: 106, w: 130, h: 195, ox: -66, oy: -24 },
   },
   alta: {
-    viewBox: '0 0 360 470',
-    bolsa: { x: 180, y: 245, lado: 220 },
-    mate: { x: 114, y: 92, w: 150, h: 236 },
-    chorro: 'M 140,130 C 152,137 160,165 162,192',
+    viewBox: '0 0 360 400',
+    // La bolsa, más chica, queda pegada al costado derecho del mate y con la
+    // base alineada a la del mate.
+    bolsa: { x: 172, y: 187, lado: 185 },
+    mate: { x: 114, y: 112, w: 150, h: 236 },
+    chorro: 'M 140,130 C 152,140 160,180 162,212',
     gotas: [
-      { cx: 156, cy: 190, r: 2.2, retraso: '1s' },
-      { cx: 167, cy: 188, r: 1.6, retraso: '1.25s' },
+      { cx: 156, cy: 210, r: 2.2, retraso: '1s' },
+      { cx: 167, cy: 208, r: 1.6, retraso: '1.25s' },
     ],
     vapores: [
-      { d: 'M 186,178 c -3,-5 3,-7 0,-13', retraso: '1.1s' },
-      { d: 'M 197,174 c -3,-4 3,-6 0,-11', retraso: '1.4s' },
+      { d: 'M 186,198 c -3,-5 3,-7 0,-13', retraso: '1.1s' },
+      { d: 'M 197,194 c -3,-4 3,-6 0,-11', retraso: '1.4s' },
     ],
     // Más parado (135°) para que el cuerpo no se salga por la izquierda.
     termo: { translate: '140 130', rotate: 135, w: 100, h: 150, ox: -50, oy: -19 },
