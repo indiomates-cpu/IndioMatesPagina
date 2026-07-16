@@ -76,12 +76,21 @@ export function MateLoader() {
           exit={{ opacity: 0 }}
           transition={{ duration: 0.5, ease: 'easeInOut' }}
         >
-          {/* Fondo: símbolos patrios argentinos en blanco y celeste. */}
-          <SimbolosPatrios />
+          {/* Fondo: íconos argentinos, con layout propio por tamaño. */}
+          <SimbolosPatrios variante="ancha" className="hidden sm:block" />
+          <SimbolosPatrios variante="alta" className="sm:hidden" />
 
           <div className="ml-escena relative flex w-full flex-col items-center">
-            {/* El termo ceba el mate, con la yerba de la marca al lado. */}
-            <MateLlenado className="w-[min(96vw,800px)]" />
+            {/* El termo ceba el mate, con la yerba de la marca al lado. La
+                escena apaisada se reacomoda en vertical en pantallas chicas. */}
+            <MateLlenado
+              variante="ancha"
+              className="hidden w-[min(96vw,800px)] sm:block"
+            />
+            <MateLlenado
+              variante="alta"
+              className="w-[min(88vw,370px)] sm:hidden"
+            />
 
             <p
               className="animate-entrada mt-3 font-marca text-3xl uppercase tracking-[0.32em] sm:text-4xl"
