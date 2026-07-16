@@ -192,9 +192,6 @@ body {
   transform-origin: 50% 100%;
   animation: ml-llenar 2s cubic-bezier(0.33, 0.66, 0.4, 1) both;
 }
-.ml-superficie {
-  animation: ml-superficie 2s ease-out both;
-}
 
 /* Respeta a quienes prefieren menos movimiento. */
 @media (prefers-reduced-motion: reduce) {

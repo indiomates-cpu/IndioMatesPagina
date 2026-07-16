@@ -20,11 +20,11 @@ export function MateLlenado({ className }: { className?: string }) {
           <path d={cuerpoMate} />
         </clipPath>
         <linearGradient id="ml-agua-grad" x1="0" y1="0" x2="0" y2="1">
-          {/* Brillo de la superficie (arriba) + agua más oscura debajo. El
-              degradado va con el rect, así el brillo marca el nivel al subir. */}
-          <stop offset="0%" stopColor="rgb(255 255 255 / 0.5)" />
-          <stop offset="4%" stopColor="rgb(10 10 10 / 0.42)" />
-          <stop offset="100%" stopColor="rgb(10 10 10 / 0.24)" />
+          {/* Agua celeste con brillo de superficie arriba. El degradado va con
+              el rect, así el brillo marca el nivel a medida que sube. */}
+          <stop offset="0%" stopColor="rgb(224 244 253 / 0.85)" />
+          <stop offset="5%" stopColor="rgb(74 168 221 / 0.7)" />
+          <stop offset="100%" stopColor="rgb(46 133 190 / 0.55)" />
         </linearGradient>
       </defs>
 
@@ -73,44 +73,43 @@ export function MateLlenado({ className }: { className?: string }) {
         opacity="0.4"
       />
 
-      {/* Bombilla (doble trazo: blanco con borde negro, se ve sobre el fondo
-          negro y sobre el mate blanco). */}
-      <g strokeLinecap="round">
-        <path d="M 150,172 L 104,120" stroke="#0a0a0a" strokeWidth="6.5" />
-        <path d="M 150,172 L 104,120" stroke="#ffffff" strokeWidth="3.4" />
-        <circle cx="104" cy="120" r="5" fill="#0a0a0a" />
-        <circle cx="104" cy="120" r="2.8" fill="#ffffff" />
+      {/* Bombilla (PNG): la punta con filtro va en la boca del mate y el pico
+          apunta a la derecha para no cruzar el chorro. */}
+      <g transform="translate(132 164) rotate(24)">
+        <image
+          href="/bombilla.png"
+          x="-78"
+          y="-128"
+          width="150"
+          height="150"
+          preserveAspectRatio="xMidYMid meet"
+        />
       </g>
 
-      {/* Chorro de agua cayendo del pico del termo a la boca del mate. */}
+      {/* Chorro de agua (celeste) cayendo del pico del termo a la boca. El
+          pico cae en ~(121,110); el chorro arranca ahí y baja a la boca. */}
       <rect
         className="ml-chorro"
-        x="118"
-        y="118"
-        width="3.6"
-        height="46"
-        rx="1.8"
-        fill="rgb(255 255 255 / 0.9)"
+        x="119"
+        y="111"
+        width="4"
+        height="55"
+        rx="2"
+        fill="rgb(120 205 240 / 0.95)"
       />
 
-      {/* Termo: el pico está fijo justo arriba de la boca del mate; el cuerpo
-          sube hacia la derecha, inclinado para verter. */}
-      <g transform="translate(120 116) rotate(46)">
-        <g className="ml-verter">
-          {/* Pico para verter (se angosta hacia el punto de vertido). */}
-          <path d="M -8,-14 L 8,-14 L 3,-1 L -3,-1 Z" fill="#ffffff" />
-          {/* Cuerpo */}
-          <rect x="-16" y="-98" width="32" height="86" rx="10" fill="#ffffff" />
-          {/* Tapa */}
-          <rect x="-13" y="-114" width="26" height="18" rx="5" fill="#ffffff" />
-          {/* Aro decorativo */}
-          <rect
-            x="-16"
-            y="-80"
-            width="32"
-            height="3.5"
-            fill="#0a0a0a"
-            opacity="0.14"
+      {/* Termo (PNG): inclinado sobre el mate, con el pico apuntando a la boca
+          para verter. El grupo externo lo posiciona/inclina; el interno hace el
+          vaivén (pivotando en el pico) sin pisar el transform de posición. */}
+      <g transform="translate(112 116) rotate(122)">
+        <g className="ml-verter" style={{ transformOrigin: '50% 0%' }}>
+          <image
+            href="/termo.png"
+            x="-52"
+            y="-14"
+            width="104"
+            height="156"
+            preserveAspectRatio="xMidYMid meet"
           />
         </g>
       </g>
