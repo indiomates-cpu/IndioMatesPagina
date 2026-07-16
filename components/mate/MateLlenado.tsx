@@ -52,8 +52,8 @@ export function MateLlenado({ className }: { className?: string }) {
 
       {/* Gotas que salpican donde cae el chorro. */}
       <g fill="rgb(125 195 240 / 0.9)">
-        <circle className="ml-gota" cx="245" cy="156" r="1.9" style={{ animationDelay: '1.25s' }} />
-        <circle className="ml-gota" cx="254" cy="154" r="1.4" style={{ animationDelay: '1.55s' }} />
+        <circle className="ml-gota" cx="245" cy="156" r="1.9" style={{ animationDelay: '1s' }} />
+        <circle className="ml-gota" cx="254" cy="154" r="1.4" style={{ animationDelay: '1.25s' }} />
       </g>
 
       {/* Vapor que sube del mate recién cebado. */}
@@ -65,12 +65,12 @@ export function MateLlenado({ className }: { className?: string }) {
         <path
           className="ml-vapor"
           d="M 265,146 c -3,-5 3,-7 0,-13"
-          style={{ animationDelay: '1.35s' }}
+          style={{ animationDelay: '1.1s' }}
         />
         <path
           className="ml-vapor"
           d="M 274,143 c -3,-4 3,-6 0,-11"
-          style={{ animationDelay: '1.7s' }}
+          style={{ animationDelay: '1.4s' }}
         />
       </g>
 

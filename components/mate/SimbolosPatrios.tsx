@@ -1,92 +1,45 @@
-// Capa decorativa del loader: símbolos patrios argentinos en blanco y
-// celeste sobre el fondo oscuro. Soles de mayo que giran, escarapelas que
-// flotan y estrellas que titilan (todo CSS, ver globals.css).
-const CELESTE = '#74ACDF';
-
-function SolDeMayo({
+// Capa decorativa del loader: íconos argentinos (los PNG "pantalla-N" de
+// public/) repartidos por los bordes sobre el fondo oscuro. El sol y la
+// pelota giran, el resto flota (todo CSS, ver globals.css). Cada ítem anida
+// dos grupos: el externo posiciona y el interno anima (la animación CSS de
+// transform pisaría el translate si fueran el mismo elemento).
+function Icono({
+  href,
   x,
   y,
-  radio,
-  color,
+  ancho,
+  alto,
   opacidad,
+  animacion,
   duracion,
+  retraso,
 }: {
+  href: string;
   x: number;
   y: number;
-  radio: number;
-  color: string;
+  ancho: number;
+  alto: number;
   opacidad: number;
-  duracion: string;
+  animacion: 'ml-girar' | 'ml-flotar';
+  duracion?: string;
+  retraso?: string;
 }) {
-  const rayos = Array.from({ length: 16 }, (_, i) => {
-    const angulo = (i * Math.PI * 2) / 16;
-    // Alterna rayos largos y cortos, como el sol de la bandera.
-    const largo = i % 2 === 0 ? radio * 1.95 : radio * 1.55;
-    return {
-      x1: Math.cos(angulo) * radio * 1.18,
-      y1: Math.sin(angulo) * radio * 1.18,
-      x2: Math.cos(angulo) * largo,
-      y2: Math.sin(angulo) * largo,
-    };
-  });
-
   return (
-    // El grupo externo posiciona; el interno gira (la animación CSS de
-    // transform pisaría el translate si fueran el mismo elemento).
-    <g transform={`translate(${x} ${y})`} stroke={color} opacity={opacidad} fill="none">
-      <g className="ml-girar" style={{ animationDuration: duracion }}>
-        <circle r={radio} strokeWidth="2.5" />
-        {rayos.map((r, i) => (
-          <line key={i} x1={r.x1} y1={r.y1} x2={r.x2} y2={r.y2} strokeWidth="2" />
-        ))}
+    <g transform={`translate(${x} ${y})`} opacity={opacidad}>
+      <g
+        className={animacion}
+        style={{ animationDuration: duracion, animationDelay: retraso }}
+      >
+        <image
+          href={href}
+          x={-ancho / 2}
+          y={-alto / 2}
+          width={ancho}
+          height={alto}
+          preserveAspectRatio="xMidYMid meet"
+        />
       </g>
     </g>
-  );
-}
-
-function Escarapela({
-  x,
-  y,
-  escala,
-  retraso,
-}: {
-  x: number;
-  y: number;
-  escala: number;
-  retraso: string;
-}) {
-  return (
-    <g transform={`translate(${x} ${y}) scale(${escala})`} fill="none">
-      <g className="ml-flotar" style={{ animationDelay: retraso }}>
-        <circle r="16" stroke={CELESTE} strokeWidth="5" opacity="0.35" />
-        <circle r="9" stroke="#ffffff" strokeWidth="4.5" opacity="0.3" />
-        <circle r="3.2" fill={CELESTE} opacity="0.45" />
-      </g>
-    </g>
-  );
-}
-
-function Estrella({
-  x,
-  y,
-  escala,
-  color,
-  retraso,
-}: {
-  x: number;
-  y: number;
-  escala: number;
-  color: string;
-  retraso: string;
-}) {
-  return (
-    <path
-      className="ml-titilar"
-      style={{ animationDelay: retraso }}
-      transform={`translate(${x} ${y}) scale(${escala})`}
-      d="M 0,-6 L 1.6,-1.6 L 6,0 L 1.6,1.6 L 0,6 L -1.6,1.6 L -6,0 L -1.6,-1.6 Z"
-      fill={color}
-    />
   );
 }
 
@@ -99,25 +52,18 @@ export function SimbolosPatrios() {
       preserveAspectRatio="xMidYMid slice"
       xmlns="http://www.w3.org/2000/svg"
     >
-      {/* Soles de mayo */}
-      <SolDeMayo x={165} y={150} radio={46} color={CELESTE} opacidad={0.3} duracion="34s" />
-      <SolDeMayo x={1290} y={620} radio={34} color="#ffffff" opacidad={0.18} duracion="46s" />
-      <SolDeMayo x={1230} y={130} radio={22} color={CELESTE} opacidad={0.24} duracion="28s" />
-
-      {/* Escarapelas */}
-      <Escarapela x={260} y={610} escala={1.15} retraso="0s" />
-      <Escarapela x={1090} y={330} escala={0.8} retraso="-1.6s" />
-      <Escarapela x={620} y={95} escala={0.9} retraso="-2.8s" />
-
-      {/* Estrellas */}
-      <Estrella x={420} y={210} escala={1} color={CELESTE} retraso="0s" />
-      <Estrella x={950} y={140} escala={0.7} color="#ffffff" retraso="-0.9s" />
-      <Estrella x={130} y={420} escala={0.8} color="#ffffff" retraso="-1.7s" />
-      <Estrella x={1350} y={390} escala={1.1} color={CELESTE} retraso="-0.5s" />
-      <Estrella x={760} y={640} escala={0.75} color={CELESTE} retraso="-2.1s" />
-      <Estrella x={490} y={700} escala={0.9} color="#ffffff" retraso="-1.2s" />
-      <Estrella x={1140} y={720} escala={0.7} color="#ffffff" retraso="-0.3s" />
-      <Estrella x={90} y={700} escala={0.85} color={CELESTE} retraso="-2.5s" />
+      {/* Sol de mayo girando (arriba izquierda). */}
+      <Icono href="/pantalla-4.png" x={160} y={145} ancho={210} alto={210} opacidad={0.55} animacion="ml-girar" duracion="42s" />
+      {/* Maradona (izquierda). */}
+      <Icono href="/pantalla-2.png" x={150} y={480} ancho={235} alto={235} opacidad={0.6} animacion="ml-flotar" retraso="-1.2s" />
+      {/* Pelota Tango rodando (abajo, a la izquierda del texto). */}
+      <Icono href="/pantalla-1.png" x={370} y={672} ancho={175} alto={152} opacidad={0.55} animacion="ml-girar" duracion="24s" />
+      {/* Medialunas (arriba, al centro). */}
+      <Icono href="/pantalla-6.png" x={725} y={112} ancho={170} alto={108} opacidad={0.55} animacion="ml-flotar" retraso="-2.6s" />
+      {/* Messi con la Copa (derecha arriba). */}
+      <Icono href="/pantalla-3.png" x={1285} y={195} ancho={235} alto={188} opacidad={0.6} animacion="ml-flotar" retraso="-0.6s" />
+      {/* Malvinas (derecha abajo). */}
+      <Icono href="/pantalla-5.png" x={1265} y={650} ancho={265} alto={216} opacidad={0.55} animacion="ml-flotar" retraso="-3.4s" />
     </svg>
   );
 }

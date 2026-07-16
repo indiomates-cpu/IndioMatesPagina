@@ -12,7 +12,7 @@ import { NOMBRE_NEGOCIO } from '@/lib/constants';
 // Las animaciones de ENTRADA van por CSS (siempre corren, a diferencia de las
 // de montaje de framer, que no son confiables en este stack). framer se usa
 // sólo para el fundido de SALIDA (presencia), que sí funciona.
-const DURACION_MS = 2400;
+const DURACION_MS = 2000;
 const DURACION_REDUCIDA_MS = 900;
 
 export function MateLoader() {

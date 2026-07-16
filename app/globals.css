@@ -256,11 +256,11 @@ body {
 .ml-verter {
   transform-box: fill-box;
   transform-origin: 50% 100%;
-  animation: ml-verter 2.2s cubic-bezier(0.22, 1, 0.36, 1) both;
+  animation: ml-verter 1.8s cubic-bezier(0.22, 1, 0.36, 1) both;
 }
 .ml-chorro {
   stroke-dasharray: 100;
-  animation: ml-chorro 2.2s ease-in-out both;
+  animation: ml-chorro 1.8s ease-in-out both;
 }
 .ml-mate-entra {
   transform-box: fill-box;
