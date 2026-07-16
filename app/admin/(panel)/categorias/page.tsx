@@ -22,7 +22,8 @@ export default async function AdminCategoriasPage() {
       <div className="mb-6">
         <h1 className="font-display text-2xl font-bold">Categorías</h1>
         <p className="text-sm text-tinta/60">
-          Organizá el catálogo. El orden define su posición en el menú.
+          Organizá el catálogo. Arrastrá las filas desde ⠿ para cambiar el
+          orden del menú (o editá el número).
         </p>
       </div>
 

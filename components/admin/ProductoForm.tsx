@@ -3,6 +3,21 @@
 import { useEffect, useRef, useState } from 'react';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
+import {
+  DndContext,
+  PointerSensor,
+  closestCenter,
+  useSensor,
+  useSensors,
+  type DragEndEvent,
+} from '@dnd-kit/core';
+import {
+  SortableContext,
+  arrayMove,
+  rectSortingStrategy,
+  useSortable,
+} from '@dnd-kit/sortable';
+import { CSS } from '@dnd-kit/utilities';
 import type { CategoriaDTO, ProductoDTO } from '@/lib/types';
 import { cn } from '@/lib/utils';
 import { calcularDescuentoPorcentaje } from '@/lib/constants';
@@ -113,6 +128,22 @@ export function ProductoForm({
     });
   }
 
+  // Arrastre (dnd-kit): la distancia mínima evita que un tap cuente como drag.
+  const sensores = useSensors(
+    useSensor(PointerSensor, { activationConstraint: { distance: 6 } })
+  );
+
+  function alTerminarArrastre(e: DragEndEvent) {
+    const { active, over } = e;
+    if (!over || active.id === over.id) return;
+    setImagenes((prev) => {
+      const desde = prev.findIndex((img) => img.key === active.id);
+      const hasta = prev.findIndex((img) => img.key === over.id);
+      if (desde < 0 || hasta < 0) return prev;
+      return arrayMove(prev, desde, hasta);
+    });
+  }
+
   // ---- Guardar ----
   async function onSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -198,62 +229,34 @@ export function ProductoForm({
         <div>
           <p className="mb-1.5 block text-sm font-medium">Imágenes</p>
           <p className="mb-3 text-xs text-tinta/50">
-            La primera imagen es la portada. Reordenalas con las flechas.
+            La primera imagen es la portada. Reordenalas arrastrando desde ⠿ o
+            con las flechas.
           </p>
 
           {imagenes.length > 0 && (
-            <ul className="mb-4 grid grid-cols-2 gap-3 sm:grid-cols-3">
-              {imagenes.map((img, i) => (
-                <li
-                  key={img.key}
-                  className="group relative animate-entrada overflow-hidden rounded-xl border border-tinta/10 transition-[border-color,box-shadow] duration-300 hover:border-tinta/30 hover:shadow-flotante-sm"
-                >
-                  <div className="relative aspect-square bg-papel-hueso">
-                    <Image
-                      src={img.url}
-                      alt={`Imagen ${i + 1}`}
-                      fill
-                      sizes="200px"
-                      className="object-cover"
+            <DndContext
+              sensors={sensores}
+              collisionDetection={closestCenter}
+              onDragEnd={alTerminarArrastre}
+            >
+              <SortableContext
+                items={imagenes.map((img) => img.key)}
+                strategy={rectSortingStrategy}
+              >
+                <ul className="mb-4 grid grid-cols-2 gap-3 sm:grid-cols-3">
+                  {imagenes.map((img, i) => (
+                    <ImagenSortable
+                      key={img.key}
+                      img={img}
+                      indice={i}
+                      total={imagenes.length}
+                      onMover={mover}
+                      onEliminar={eliminarImagen}
                     />
-                    {i === 0 && (
-                      <span className="absolute left-1.5 top-1.5 rounded-full bg-tinta px-2 py-0.5 text-[10px] font-medium text-papel">
-                        Portada
-                      </span>
-                    )}
-                  </div>
-                  <div className="flex items-center justify-between gap-1 p-1.5">
-                    <div className="flex gap-1">
-                      <button
-                        type="button"
-                        onClick={() => mover(i, -1)}
-                        disabled={i === 0}
-                        aria-label="Mover a la izquierda"
-                        className="presionable rounded-md border border-tinta/15 px-2 py-1 text-xs hover:bg-tinta/5 disabled:opacity-30"
-                      >
-                        ←
-                      </button>
-                      <button
-                        type="button"
-                        onClick={() => mover(i, 1)}
-                        disabled={i === imagenes.length - 1}
-                        aria-label="Mover a la derecha"
-                        className="presionable rounded-md border border-tinta/15 px-2 py-1 text-xs hover:bg-tinta/5 disabled:opacity-30"
-                      >
-                        →
-                      </button>
-                    </div>
-                    <button
-                      type="button"
-                      onClick={() => eliminarImagen(img.key)}
-                      className="presionable rounded-md border border-tinta/15 px-2 py-1 text-xs text-red-600 hover:border-red-400 hover:bg-red-50 hover:text-red-700"
-                    >
-                      Quitar
-                    </button>
-                  </div>
-                </li>
-              ))}
-            </ul>
+                  ))}
+                </ul>
+              </SortableContext>
+            </DndContext>
           )}
 
           {/* Agregar por URL */}
@@ -439,6 +442,103 @@ export function ProductoForm({
         </button>
       </aside>
     </form>
+  );
+}
+
+// Tarjeta de imagen arrastrable (dnd-kit). La imagen se muestra completa
+// (object-contain, sin recorte) y se reordena arrastrando desde ⠿ —también
+// funciona con el dedo— o con las flechas.
+function ImagenSortable({
+  img,
+  indice,
+  total,
+  onMover,
+  onEliminar,
+}: {
+  img: ImagenLocal;
+  indice: number;
+  total: number;
+  onMover: (index: number, delta: number) => void;
+  onEliminar: (key: string) => void;
+}) {
+  const {
+    attributes,
+    listeners,
+    setNodeRef,
+    transform,
+    transition,
+    isDragging,
+  } = useSortable({ id: img.key });
+
+  return (
+    <li
+      ref={setNodeRef}
+      style={{
+        transform: CSS.Transform.toString(transform),
+        transition,
+        zIndex: isDragging ? 10 : undefined,
+      }}
+      className={cn(
+        'group relative animate-entrada overflow-hidden rounded-xl border bg-papel transition-[border-color,box-shadow] duration-300',
+        isDragging
+          ? 'border-tinta/40 shadow-flotante'
+          : 'border-tinta/10 hover:border-tinta/30 hover:shadow-flotante-sm'
+      )}
+    >
+      <div className="relative aspect-square bg-papel-hueso">
+        <Image
+          src={img.url}
+          alt={`Imagen ${indice + 1}`}
+          fill
+          sizes="200px"
+          className="object-contain"
+        />
+        {indice === 0 && (
+          <span className="absolute left-1.5 top-1.5 rounded-full bg-tinta px-2 py-0.5 text-[10px] font-medium text-papel">
+            Portada
+          </span>
+        )}
+      </div>
+      <div className="flex items-center justify-between gap-1 p-1.5">
+        <div className="flex gap-1">
+          <button
+            type="button"
+            aria-label="Arrastrar para reordenar"
+            {...attributes}
+            {...listeners}
+            style={{ touchAction: 'none' }}
+            className="cursor-grab rounded-md border border-tinta/15 px-2 py-1 text-xs text-tinta/60 hover:bg-tinta/5 active:cursor-grabbing"
+          >
+            ⠿
+          </button>
+          <button
+            type="button"
+            onClick={() => onMover(indice, -1)}
+            disabled={indice === 0}
+            aria-label="Mover a la izquierda"
+            className="presionable rounded-md border border-tinta/15 px-2 py-1 text-xs hover:bg-tinta/5 disabled:opacity-30"
+          >
+            ←
+          </button>
+          <button
+            type="button"
+            onClick={() => onMover(indice, 1)}
+            disabled={indice === total - 1}
+            aria-label="Mover a la derecha"
+            className="presionable rounded-md border border-tinta/15 px-2 py-1 text-xs hover:bg-tinta/5 disabled:opacity-30"
+          >
+            →
+          </button>
+        </div>
+        <button
+          type="button"
+          onClick={() => onEliminar(img.key)}
+          className="presionable rounded-md border border-tinta/15 px-2 py-1 text-xs text-red-600 hover:border-red-400 hover:bg-red-50 hover:text-red-700"
+        >
+          Quitar
+        </button>
+      </div>
+    </li>
   );
 }
 

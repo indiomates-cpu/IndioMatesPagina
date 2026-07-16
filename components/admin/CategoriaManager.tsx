@@ -1,6 +1,22 @@
 'use client';
 
 import { useState } from 'react';
+import {
+  DndContext,
+  PointerSensor,
+  closestCenter,
+  useSensor,
+  useSensors,
+  type DragEndEvent,
+} from '@dnd-kit/core';
+import {
+  SortableContext,
+  arrayMove,
+  verticalListSortingStrategy,
+  useSortable,
+} from '@dnd-kit/sortable';
+import { CSS } from '@dnd-kit/utilities';
+import { cn } from '@/lib/utils';
 
 export interface CategoriaAdmin {
   id: string;
@@ -22,6 +38,59 @@ export function CategoriaManager({ inicial }: { inicial: CategoriaAdmin[] }) {
 
   const inputBase =
     'rounded-lg border border-tinta/15 bg-papel px-3 py-2 text-sm outline-none transition-[border-color,box-shadow] duration-300 focus:border-tinta focus:ring-4 focus:ring-tinta/5';
+
+  // Arrastre (dnd-kit): la distancia mínima evita que un tap cuente como drag.
+  const sensores = useSensors(
+    useSensor(PointerSensor, { activationConstraint: { distance: 6 } })
+  );
+
+  async function alTerminarArrastre(e: DragEndEvent) {
+    const { active, over } = e;
+    if (!over || active.id === over.id) return;
+
+    const previas = categorias;
+    const desde = previas.findIndex((c) => c.id === active.id);
+    const hasta = previas.findIndex((c) => c.id === over.id);
+    if (desde < 0 || hasta < 0) return;
+
+    // Renumera 0..n-1 según la nueva posición y persiste sólo las que cambian.
+    const nuevas = arrayMove(previas, desde, hasta).map((c, i) => ({
+      ...c,
+      orden: i,
+    }));
+    setCategorias(nuevas);
+    setError(null);
+
+    const cambiadas = nuevas.filter((c) => {
+      const antes = previas.find((p) => p.id === c.id)!;
+      return antes.orden !== c.orden;
+    });
+    try {
+      await Promise.all(
+        cambiadas.map(async (c) => {
+          const res = await fetch(`/api/admin/categorias/${c.id}`, {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              nombre: c.nombre,
+              slug: c.slug,
+              orden: c.orden,
+            }),
+          });
+          if (!res.ok) {
+            const data = await res.json().catch(() => ({}));
+            throw new Error(data.error ?? 'Error al guardar el orden');
+          }
+        })
+      );
+    } catch (err) {
+      // Si algo falla, volvemos al orden anterior para no mentir en pantalla.
+      setCategorias(previas);
+      setError(
+        err instanceof Error ? err.message : 'Error al guardar el orden'
+      );
+    }
+  }
 
   async function crear(e: React.FormEvent) {
     e.preventDefault();
@@ -108,86 +177,44 @@ export function CategoriaManager({ inicial }: { inicial: CategoriaAdmin[] }) {
         )}
 
         <div className="overflow-hidden rounded-2xl border border-tinta/10 bg-papel">
-          <table className="w-full text-sm">
-            <thead className="border-b border-tinta/10 text-left text-xs uppercase tracking-wide text-tinta/50">
-              <tr>
-                <th className="p-3 font-medium">Nombre</th>
-                <th className="p-3 font-medium">Orden</th>
-                <th className="p-3 font-medium">Productos</th>
-                <th className="p-3 text-right font-medium">Acciones</th>
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-tinta/5">
-              {categorias.map((c) => (
-                <tr
-                  key={c.id}
-                  className="transition-colors duration-300 hover:bg-papel-hueso/70"
-                >
-                  {editId === c.id ? (
-                    <>
-                      <td className="p-3">
-                        <input
-                          value={editNombre}
-                          onChange={(e) => setEditNombre(e.target.value)}
-                          className={`${inputBase} w-full`}
-                        />
-                      </td>
-                      <td className="p-3">
-                        <input
-                          type="number"
-                          value={editOrden}
-                          onChange={(e) => setEditOrden(e.target.value)}
-                          className={`${inputBase} w-16`}
-                        />
-                      </td>
-                      <td className="p-3 text-tinta/50">{c.cantidadProductos}</td>
-                      <td className="p-3">
-                        <div className="flex items-center justify-end gap-2">
-                          <button
-                            onClick={() => guardarEdicion(c.id)}
-                            className="presionable rounded-md bg-tinta px-2.5 py-1 text-xs text-papel hover:bg-tinta-suave"
-                          >
-                            Guardar
-                          </button>
-                          <button
-                            onClick={() => setEditId(null)}
-                            className="presionable rounded-md border border-tinta/15 px-2.5 py-1 text-xs hover:bg-tinta/5"
-                          >
-                            Cancelar
-                          </button>
-                        </div>
-                      </td>
-                    </>
-                  ) : (
-                    <>
-                      <td className="p-3">
-                        <p className="font-medium">{c.nombre}</p>
-                        <p className="text-xs text-tinta/40">/{c.slug}</p>
-                      </td>
-                      <td className="p-3 tabular-nums">{c.orden}</td>
-                      <td className="p-3 text-tinta/50">{c.cantidadProductos}</td>
-                      <td className="p-3">
-                        <div className="flex items-center justify-end gap-2">
-                          <button
-                            onClick={() => empezarEdicion(c)}
-                            className="presionable rounded-md border border-tinta/15 px-2.5 py-1 text-xs font-medium hover:border-tinta/40 hover:bg-tinta/5"
-                          >
-                            Editar
-                          </button>
-                          <button
-                            onClick={() => eliminar(c.id, c.nombre)}
-                            className="presionable rounded-md border border-tinta/15 px-2.5 py-1 text-xs font-medium text-red-600 hover:border-red-400 hover:bg-red-50 hover:text-red-700"
-                          >
-                            Eliminar
-                          </button>
-                        </div>
-                      </td>
-                    </>
-                  )}
-                </tr>
-              ))}
-            </tbody>
-          </table>
+          {/* Encabezado (sólo desktop) */}
+          <div className="hidden border-b border-tinta/10 p-3 text-xs uppercase tracking-wide text-tinta/50 sm:flex sm:items-center sm:gap-3">
+            <span className="w-8" aria-hidden="true" />
+            <span className="flex-1 font-medium">Nombre</span>
+            <span className="w-14 text-center font-medium">Orden</span>
+            <span className="w-20 text-center font-medium">Productos</span>
+            <span className="w-36 text-right font-medium">Acciones</span>
+          </div>
+
+          <DndContext
+            sensors={sensores}
+            collisionDetection={closestCenter}
+            onDragEnd={alTerminarArrastre}
+          >
+            <SortableContext
+              items={categorias.map((c) => c.id)}
+              strategy={verticalListSortingStrategy}
+            >
+              <ul className="divide-y divide-tinta/5">
+                {categorias.map((c) => (
+                  <FilaCategoria
+                    key={c.id}
+                    categoria={c}
+                    enEdicion={editId === c.id}
+                    editNombre={editNombre}
+                    editOrden={editOrden}
+                    setEditNombre={setEditNombre}
+                    setEditOrden={setEditOrden}
+                    inputBase={inputBase}
+                    onEditar={() => empezarEdicion(c)}
+                    onGuardar={() => guardarEdicion(c.id)}
+                    onCancelar={() => setEditId(null)}
+                    onEliminar={() => eliminar(c.id, c.nombre)}
+                  />
+                ))}
+              </ul>
+            </SortableContext>
+          </DndContext>
         </div>
 
         {categorias.length === 0 && (
@@ -234,5 +261,134 @@ export function CategoriaManager({ inicial }: { inicial: CategoriaAdmin[] }) {
         </form>
       </aside>
     </div>
+  );
+}
+
+// Fila arrastrable de la lista (dnd-kit): se reordena desde el mango ⠿
+// —también con el dedo en mobile— o editando el número de orden.
+function FilaCategoria({
+  categoria: c,
+  enEdicion,
+  editNombre,
+  editOrden,
+  setEditNombre,
+  setEditOrden,
+  inputBase,
+  onEditar,
+  onGuardar,
+  onCancelar,
+  onEliminar,
+}: {
+  categoria: CategoriaAdmin;
+  enEdicion: boolean;
+  editNombre: string;
+  editOrden: string;
+  setEditNombre: (v: string) => void;
+  setEditOrden: (v: string) => void;
+  inputBase: string;
+  onEditar: () => void;
+  onGuardar: () => void;
+  onCancelar: () => void;
+  onEliminar: () => void;
+}) {
+  const {
+    attributes,
+    listeners,
+    setNodeRef,
+    transform,
+    transition,
+    isDragging,
+  } = useSortable({ id: c.id });
+
+  return (
+    <li
+      ref={setNodeRef}
+      style={{
+        transform: CSS.Transform.toString(transform),
+        transition,
+        zIndex: isDragging ? 10 : undefined,
+        position: 'relative',
+      }}
+      className={cn(
+        'bg-papel transition-colors duration-300',
+        isDragging ? 'shadow-flotante' : 'hover:bg-papel-hueso/70'
+      )}
+    >
+      {enEdicion ? (
+        <div className="flex flex-wrap items-center gap-2 p-3">
+          <input
+            value={editNombre}
+            onChange={(e) => setEditNombre(e.target.value)}
+            className={`${inputBase} min-w-[9rem] flex-1`}
+          />
+          <input
+            type="number"
+            value={editOrden}
+            onChange={(e) => setEditOrden(e.target.value)}
+            className={`${inputBase} w-20`}
+            aria-label="Orden"
+          />
+          <button
+            onClick={onGuardar}
+            className="presionable rounded-md bg-tinta px-2.5 py-1.5 text-xs text-papel hover:bg-tinta-suave"
+          >
+            Guardar
+          </button>
+          <button
+            onClick={onCancelar}
+            className="presionable rounded-md border border-tinta/15 px-2.5 py-1.5 text-xs hover:bg-tinta/5"
+          >
+            Cancelar
+          </button>
+        </div>
+      ) : (
+        <div className="flex items-center gap-2 p-3 sm:gap-3">
+          <button
+            type="button"
+            aria-label={`Arrastrar para reordenar ${c.nombre}`}
+            {...attributes}
+            {...listeners}
+            style={{ touchAction: 'none' }}
+            className="w-8 shrink-0 cursor-grab rounded-md border border-tinta/15 py-1.5 text-center text-sm text-tinta/50 hover:bg-tinta/5 active:cursor-grabbing"
+          >
+            ⠿
+          </button>
+
+          <div className="min-w-0 flex-1">
+            <p className="truncate font-medium">{c.nombre}</p>
+            <p className="truncate text-xs text-tinta/40">
+              /{c.slug}
+              <span className="sm:hidden">
+                {' '}
+                · {c.cantidadProductos}{' '}
+                {c.cantidadProductos === 1 ? 'producto' : 'productos'}
+              </span>
+            </p>
+          </div>
+
+          <span className="hidden w-14 text-center tabular-nums text-tinta/60 sm:block">
+            {c.orden}
+          </span>
+          <span className="hidden w-20 text-center text-tinta/50 sm:block">
+            {c.cantidadProductos}
+          </span>
+
+          <div className="flex w-auto shrink-0 items-center justify-end gap-2 sm:w-36">
+            <button
+              onClick={onEditar}
+              className="presionable rounded-md border border-tinta/15 px-2.5 py-1.5 text-xs font-medium hover:border-tinta/40 hover:bg-tinta/5"
+            >
+              Editar
+            </button>
+            <button
+              onClick={onEliminar}
+              className="presionable rounded-md border border-tinta/15 px-2.5 py-1.5 text-xs font-medium text-red-600 hover:border-red-400 hover:bg-red-50 hover:text-red-700"
+            >
+              Eliminar
+            </button>
+          </div>
+        </div>
+      )}
+    </li>
   );
 }
