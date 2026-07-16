@@ -25,34 +25,34 @@ const FONDOS: Record<'ancha' | 'alta', { viewBox: string; items: Item[] }> = {
     viewBox: '0 0 1440 800',
     items: [
       // Sol de mayo girando (arriba izquierda).
-      { href: '/pantalla-4.png', x: 125, y: 115, ancho: 150, alto: 150, opacidad: 0.5, animacion: 'ml-girar', duracion: '42s' },
+      { href: '/pantalla-4.webp', x: 170, y: 150, ancho: 190, alto: 190, opacidad: 0.5, animacion: 'ml-girar', duracion: '42s' },
       // Maradona (izquierda).
-      { href: '/pantalla-2.png', x: 115, y: 500, ancho: 170, alto: 170, opacidad: 0.55, animacion: 'ml-flotar', retraso: '-1.2s' },
+      { href: '/pantalla-2.webp', x: 150, y: 520, ancho: 210, alto: 210, opacidad: 0.55, animacion: 'ml-flotar', retraso: '-1.2s' },
       // Pelota Tango rodando (abajo a la izquierda).
-      { href: '/pantalla-1.png', x: 300, y: 705, ancho: 130, alto: 113, opacidad: 0.5, animacion: 'ml-girar', duracion: '24s' },
+      { href: '/pantalla-1.webp', x: 330, y: 670, ancho: 160, alto: 139, opacidad: 0.5, animacion: 'ml-girar', duracion: '24s' },
       // Medialunas (arriba, al centro).
-      { href: '/pantalla-6.png', x: 725, y: 75, ancho: 125, alto: 80, opacidad: 0.5, animacion: 'ml-flotar', retraso: '-2.6s' },
+      { href: '/pantalla-6.webp', x: 725, y: 105, ancho: 150, alto: 96, opacidad: 0.5, animacion: 'ml-flotar', retraso: '-2.6s' },
       // Messi con la Copa (derecha arriba).
-      { href: '/pantalla-3.png', x: 1320, y: 165, ancho: 175, alto: 140, opacidad: 0.55, animacion: 'ml-flotar', retraso: '-0.6s' },
+      { href: '/pantalla-3.webp', x: 1270, y: 190, ancho: 210, alto: 168, opacidad: 0.55, animacion: 'ml-flotar', retraso: '-0.6s' },
       // Malvinas (derecha abajo).
-      { href: '/pantalla-5.png', x: 1305, y: 675, ancho: 195, alto: 159, opacidad: 0.5, animacion: 'ml-flotar', retraso: '-3.4s' },
+      { href: '/pantalla-5.webp', x: 1250, y: 655, ancho: 230, alto: 188, opacidad: 0.5, animacion: 'ml-flotar', retraso: '-3.4s' },
     ],
   },
   alta: {
     viewBox: '0 0 400 870',
     items: [
       // Sol de mayo (arriba izquierda).
-      { href: '/pantalla-4.png', x: 62, y: 78, ancho: 100, alto: 100, opacidad: 0.45, animacion: 'ml-girar', duracion: '42s' },
+      { href: '/pantalla-4.webp', x: 64, y: 110, ancho: 100, alto: 100, opacidad: 0.45, animacion: 'ml-girar', duracion: '42s' },
       // Medialunas (arriba derecha).
-      { href: '/pantalla-6.png', x: 330, y: 62, ancho: 100, alto: 64, opacidad: 0.45, animacion: 'ml-flotar', retraso: '-2.6s' },
+      { href: '/pantalla-6.webp', x: 330, y: 100, ancho: 100, alto: 64, opacidad: 0.45, animacion: 'ml-flotar', retraso: '-2.6s' },
       // Messi con la Copa (derecha, a media altura).
-      { href: '/pantalla-3.png', x: 348, y: 240, ancho: 115, alto: 92, opacidad: 0.45, animacion: 'ml-flotar', retraso: '-0.6s' },
+      { href: '/pantalla-3.webp', x: 350, y: 250, ancho: 115, alto: 92, opacidad: 0.45, animacion: 'ml-flotar', retraso: '-0.6s' },
       // Maradona (izquierda, a media altura).
-      { href: '/pantalla-2.png', x: 45, y: 355, ancho: 115, alto: 115, opacidad: 0.45, animacion: 'ml-flotar', retraso: '-1.2s' },
-      // Pelota Tango (abajo izquierda).
-      { href: '/pantalla-1.png', x: 52, y: 705, ancho: 95, alto: 83, opacidad: 0.45, animacion: 'ml-girar', duracion: '24s' },
-      // Malvinas (abajo derecha).
-      { href: '/pantalla-5.png', x: 330, y: 735, ancho: 135, alto: 110, opacidad: 0.45, animacion: 'ml-flotar', retraso: '-3.4s' },
+      { href: '/pantalla-2.webp', x: 44, y: 370, ancho: 115, alto: 115, opacidad: 0.45, animacion: 'ml-flotar', retraso: '-1.2s' },
+      // Pelota Tango (abajo izquierda, pegada al borde para no pisar el texto).
+      { href: '/pantalla-1.webp', x: 42, y: 760, ancho: 85, alto: 74, opacidad: 0.45, animacion: 'ml-girar', duracion: '24s' },
+      // Malvinas (abajo derecha, pegada al borde para no pisar el texto).
+      { href: '/pantalla-5.webp', x: 356, y: 765, ancho: 115, alto: 94, opacidad: 0.45, animacion: 'ml-flotar', retraso: '-3.4s' },
     ],
   },
 };

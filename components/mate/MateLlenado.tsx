@@ -63,7 +63,7 @@ export function MateLlenado({
       {/* Bolsa de yerba: entra deslizándose desde la derecha. */}
       <g className="ml-bolsa-entra">
         <image
-          href="/yerba.png"
+          href="/yerba.webp"
           x={e.bolsa.x}
           y={e.bolsa.y}
           width={e.bolsa.lado}
@@ -75,7 +75,7 @@ export function MateLlenado({
       {/* Mate terminado: aparece con un rebote desde abajo. */}
       <g className="ml-mate-entra">
         <image
-          href="/mate-terminado.png"
+          href="/mate-terminado.webp"
           x={e.mate.x}
           y={e.mate.y}
           width={e.mate.w}
@@ -133,7 +133,7 @@ export function MateLlenado({
         <g transform={`translate(${e.termo.translate}) rotate(${e.termo.rotate})`}>
           <g className="ml-verter" style={{ transformOrigin: '50% 0%' }}>
             <image
-              href="/termo.png"
+              href="/termo.webp"
               x={e.termo.ox}
               y={e.termo.oy}
               width={e.termo.w}

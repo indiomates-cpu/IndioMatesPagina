@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
+import { preload } from 'react-dom';
 import { AnimatePresence, motion, useReducedMotion } from 'framer-motion';
 import { MateLlenado } from './MateLlenado';
 import { SimbolosPatrios } from './SimbolosPatrios';
@@ -16,6 +17,12 @@ const DURACION_MS = 2000;
 const DURACION_REDUCIDA_MS = 900;
 
 export function MateLoader() {
+  // Precarga de la escena: la animación arranca apenas carga el CSS, así que
+  // las imágenes tienen que llegar cuanto antes (sobre todo en mobile).
+  preload('/mate-terminado.webp', { as: 'image' });
+  preload('/termo.webp', { as: 'image' });
+  preload('/yerba.webp', { as: 'image' });
+
   // Arranca en `true` para que el SSR ya renderice el loader y cubra la
   // pantalla desde el primer frame (sin flash del sitio). En visitas donde ya
   // se mostró, un script bloqueante + CSS (.loader-oculto) lo ocultan al
@@ -93,7 +100,7 @@ export function MateLoader() {
             />
 
             <p
-              className="animate-entrada mt-3 font-marca text-3xl uppercase tracking-[0.32em] sm:text-4xl"
+              className="animate-entrada mt-3 font-marca text-2xl uppercase tracking-[0.32em] sm:text-4xl"
               style={{ animationDelay: '500ms' }}
             >
               {NOMBRE_NEGOCIO}

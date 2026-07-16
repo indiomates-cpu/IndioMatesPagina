@@ -145,9 +145,9 @@ body {
     transform: rotate(-7deg);
   }
 }
-/* Chorro de agua: se "dibuja" curvo desde el pico (stroke-dash) y luego se
-   corta. Requiere pathLength="100" en el path. Arranca cuando el termo ya
-   terminó de entrar (~32%). */
+/* Chorro de agua: se "dibuja" curvo desde el pico (stroke-dash) y queda
+   vertiendo hasta que el loader se funde (si se cortara solo, en conexiones
+   lentas podría no llegar a verse). Requiere pathLength="100" en el path. */
 @keyframes ml-chorro {
   0%,
   30% {
@@ -158,13 +158,8 @@ body {
     opacity: 1;
   }
   52%,
-  84% {
-    opacity: 1;
-    stroke-dashoffset: 0;
-  }
-  94%,
   100% {
-    opacity: 0;
+    opacity: 1;
     stroke-dashoffset: 0;
   }
 }
