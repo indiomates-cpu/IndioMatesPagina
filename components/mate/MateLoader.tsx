@@ -81,10 +81,10 @@ export function MateLoader() {
 
           <div className="ml-escena relative flex w-full flex-col items-center">
             {/* El termo ceba el mate, con la yerba de la marca al lado. */}
-            <MateLlenado className="w-[min(94vw,660px)]" />
+            <MateLlenado className="w-[min(96vw,800px)]" />
 
             <p
-              className="animate-entrada mt-3 font-marca text-2xl uppercase tracking-[0.32em] sm:text-3xl"
+              className="animate-entrada mt-3 font-marca text-3xl uppercase tracking-[0.32em] sm:text-4xl"
               style={{ animationDelay: '500ms' }}
             >
               {NOMBRE_NEGOCIO}

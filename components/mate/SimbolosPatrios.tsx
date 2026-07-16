@@ -53,17 +53,17 @@ export function SimbolosPatrios() {
       xmlns="http://www.w3.org/2000/svg"
     >
       {/* Sol de mayo girando (arriba izquierda). */}
-      <Icono href="/pantalla-4.png" x={160} y={145} ancho={210} alto={210} opacidad={0.55} animacion="ml-girar" duracion="42s" />
+      <Icono href="/pantalla-4.png" x={125} y={115} ancho={150} alto={150} opacidad={0.5} animacion="ml-girar" duracion="42s" />
       {/* Maradona (izquierda). */}
-      <Icono href="/pantalla-2.png" x={150} y={480} ancho={235} alto={235} opacidad={0.6} animacion="ml-flotar" retraso="-1.2s" />
-      {/* Pelota Tango rodando (abajo, a la izquierda del texto). */}
-      <Icono href="/pantalla-1.png" x={370} y={672} ancho={175} alto={152} opacidad={0.55} animacion="ml-girar" duracion="24s" />
+      <Icono href="/pantalla-2.png" x={115} y={500} ancho={170} alto={170} opacidad={0.55} animacion="ml-flotar" retraso="-1.2s" />
+      {/* Pelota Tango rodando (abajo a la izquierda). */}
+      <Icono href="/pantalla-1.png" x={300} y={705} ancho={130} alto={113} opacidad={0.5} animacion="ml-girar" duracion="24s" />
       {/* Medialunas (arriba, al centro). */}
-      <Icono href="/pantalla-6.png" x={725} y={112} ancho={170} alto={108} opacidad={0.55} animacion="ml-flotar" retraso="-2.6s" />
+      <Icono href="/pantalla-6.png" x={725} y={75} ancho={125} alto={80} opacidad={0.5} animacion="ml-flotar" retraso="-2.6s" />
       {/* Messi con la Copa (derecha arriba). */}
-      <Icono href="/pantalla-3.png" x={1285} y={195} ancho={235} alto={188} opacidad={0.6} animacion="ml-flotar" retraso="-0.6s" />
+      <Icono href="/pantalla-3.png" x={1320} y={165} ancho={175} alto={140} opacidad={0.55} animacion="ml-flotar" retraso="-0.6s" />
       {/* Malvinas (derecha abajo). */}
-      <Icono href="/pantalla-5.png" x={1265} y={650} ancho={265} alto={216} opacidad={0.55} animacion="ml-flotar" retraso="-3.4s" />
+      <Icono href="/pantalla-5.png" x={1305} y={675} ancho={195} alto={159} opacidad={0.5} animacion="ml-flotar" retraso="-3.4s" />
     </svg>
   );
 }

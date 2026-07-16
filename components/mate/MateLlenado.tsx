@@ -40,10 +40,12 @@ export function MateLlenado({ className }: { className?: string }) {
 
       {/* Chorro de agua (celeste): curva desde el pico del termo hasta la
           yerba del mate. Se dibuja con stroke-dash (ver .ml-chorro). */}
+      {/* La curva sale del pico siguiendo su dirección (hacia la derecha) y
+          después cae por gravedad hasta la yerba: arco espejado, natural. */}
       <path
         className="ml-chorro"
         pathLength="100"
-        d="M 225,105 C 229,124 244,140 251,157"
+        d="M 225,105 C 238,110 250,131 251,157"
         fill="none"
         stroke="rgb(125 195 240 / 0.95)"
         strokeWidth="3.4"
