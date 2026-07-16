@@ -86,22 +86,22 @@ export function MateLlenado({ className }: { className?: string }) {
         />
       </g>
 
-      {/* Chorro de agua (celeste) cayendo del pico del termo a la boca. El
-          pico cae en ~(121,110); el chorro arranca ahí y baja a la boca. */}
-      <rect
+      {/* Chorro de agua (celeste): curva desde el pico del termo hasta la boca
+          del mate. Se dibuja con stroke-dash (ver .ml-chorro). */}
+      <path
         className="ml-chorro"
-        x="119"
-        y="111"
-        width="4"
-        height="55"
-        rx="2"
-        fill="rgb(120 205 240 / 0.95)"
+        pathLength="100"
+        d="M 121,113 C 129,126 133,147 129,163"
+        fill="none"
+        stroke="rgb(120 205 240 / 0.95)"
+        strokeWidth="4"
+        strokeLinecap="round"
       />
 
       {/* Termo (PNG): inclinado sobre el mate, con el pico apuntando a la boca
           para verter. El grupo externo lo posiciona/inclina; el interno hace el
           vaivén (pivotando en el pico) sin pisar el transform de posición. */}
-      <g transform="translate(112 116) rotate(122)">
+      <g transform="translate(112 116) rotate(98)">
         <g className="ml-verter" style={{ transformOrigin: '50% 0%' }}>
           <image
             href="/termo.png"
