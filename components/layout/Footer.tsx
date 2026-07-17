@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import Image from 'next/image';
-import { NOMBRE_NEGOCIO } from '@/lib/constants';
+import { NOMBRE_NEGOCIO, URL_INSTAGRAM } from '@/lib/constants';
+import { IconoInstagram } from '@/components/ui/IconoInstagram';
 
 export function Footer() {
   const anio = new Date().getFullYear();
@@ -26,6 +27,16 @@ export function Footer() {
               Mates, bombillas, yerberas, termos y accesorios. Elegí tus
               productos y coordinamos el pedido por WhatsApp.
             </p>
+            <a
+              href={URL_INSTAGRAM}
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label="Instagram de Indio Mates"
+              className="presionable mt-4 inline-flex items-center gap-2 rounded-full border border-tinta/15 px-3.5 py-2 text-sm text-tinta/60 transition-colors duration-300 hover:bg-tinta/5 hover:text-tinta"
+            >
+              <IconoInstagram className="h-4 w-4" />
+              @indio_mates
+            </a>
           </div>
 
           <nav className="flex flex-col items-start gap-2 text-sm">

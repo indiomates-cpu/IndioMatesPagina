@@ -10,8 +10,9 @@ import {
   useMotionValueEvent,
   useScroll,
 } from 'framer-motion';
-import { NOMBRE_NEGOCIO } from '@/lib/constants';
+import { NOMBRE_NEGOCIO, URL_INSTAGRAM } from '@/lib/constants';
 import { CartIcon } from '@/components/cart/CartIcon';
+import { IconoInstagram } from '@/components/ui/IconoInstagram';
 import { RESORTE_SUAVE } from '@/lib/motion';
 import { cn } from '@/lib/utils';
 
@@ -41,7 +42,9 @@ export function Header() {
     <>
     <header
       className={cn(
-        'sticky top-0 z-30 border-b border-tinta/10 bg-papel/85 backdrop-blur-md transition-shadow duration-500',
+        // En mobile, fondo casi opaco SIN blur: backdrop-filter sobre sticky
+        // parpadea al scrollear en Chrome Android y castiga la GPU.
+        'sticky top-0 z-30 border-b border-tinta/10 bg-papel/95 transition-shadow duration-500 md:bg-papel/85 md:backdrop-blur-md',
         desplazado && 'shadow-[0_10px_28px_-18px_rgb(10_10_10/0.35)]'
       )}
     >
@@ -86,6 +89,16 @@ export function Header() {
         </nav>
 
         <div className="flex items-center gap-2">
+          {/* Instagram: visible solo en desktop; en mobile vive en el drawer. */}
+          <a
+            href={URL_INSTAGRAM}
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label="Instagram de Indio Mates"
+            className="presionable hidden h-11 w-11 items-center justify-center rounded-full border border-tinta/15 text-tinta/70 transition-colors duration-300 hover:bg-tinta/5 hover:text-tinta md:inline-flex"
+          >
+            <IconoInstagram />
+          </a>
           <CartIcon />
           {/* Botón de menú mobile: las tres líneas se transforman en una X. */}
           <button
@@ -127,9 +140,11 @@ export function Header() {
     <AnimatePresence>
       {menuAbierto && (
         <>
-          {/* Fondo oscuro (entra por CSS, sale con framer). */}
+          {/* Fondo oscuro (entra por CSS, sale con framer). Sin backdrop-blur:
+              animar la opacidad de una capa que re-blurea todo el viewport
+              tira frames en la GPU del teléfono. */}
           <motion.div
-            className="menu-fondo-entra fixed inset-0 z-40 bg-tinta/50 backdrop-blur-sm md:hidden"
+            className="menu-fondo-entra fixed inset-0 z-40 bg-tinta/60 md:hidden"
             initial={false}
             exit={{ opacity: 0 }}
             transition={{ duration: 0.3 }}
@@ -183,9 +198,21 @@ export function Header() {
               ))}
             </nav>
 
-            {/* Marca al pie del panel */}
-            <div className="mt-auto border-t border-tinta/10 px-5 py-4 text-xs uppercase tracking-[0.25em] text-tinta/40">
-              {NOMBRE_NEGOCIO}
+            {/* Instagram + marca al pie del panel */}
+            <div className="mt-auto border-t border-tinta/10 px-5 py-4">
+              <a
+                href={URL_INSTAGRAM}
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="Instagram de Indio Mates"
+                className="presionable inline-flex items-center gap-2 rounded-full border border-tinta/15 px-3.5 py-2 text-sm text-tinta/70 hover:bg-tinta/5 hover:text-tinta"
+              >
+                <IconoInstagram className="h-4 w-4" />
+                @indio_mates
+              </a>
+              <div className="mt-4 text-xs uppercase tracking-[0.25em] text-tinta/40">
+                {NOMBRE_NEGOCIO}
+              </div>
             </div>
           </motion.aside>
         </>

@@ -15,6 +15,9 @@ export const IMAGEN_PLACEHOLDER =
 // Nombre del negocio.
 export const NOMBRE_NEGOCIO = 'Indio Mates';
 
+// Perfil de Instagram del negocio.
+export const URL_INSTAGRAM = 'https://www.instagram.com/indio_mates/';
+
 // Tipos de evento registrados en la tabla EventoMetrica.
 export const EVENTO = {
   VISTA_PRODUCTO: 'vista_producto',
