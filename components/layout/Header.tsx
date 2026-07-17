@@ -89,13 +89,13 @@ export function Header() {
         </nav>
 
         <div className="flex items-center gap-2">
-          {/* Instagram: visible solo en desktop; en mobile vive en el drawer. */}
+          {/* Instagram: siempre visible, junto al carrito. */}
           <a
             href={URL_INSTAGRAM}
             target="_blank"
             rel="noopener noreferrer"
             aria-label="Instagram de Indio Mates"
-            className="presionable hidden h-11 w-11 items-center justify-center rounded-full border border-tinta/15 text-tinta/70 transition-colors duration-300 hover:bg-tinta/5 hover:text-tinta md:inline-flex"
+            className="presionable inline-flex h-11 w-11 items-center justify-center rounded-full border border-tinta/15 text-tinta/70 transition-colors duration-300 hover:bg-tinta/5 hover:text-tinta"
           >
             <IconoInstagram />
           </a>
