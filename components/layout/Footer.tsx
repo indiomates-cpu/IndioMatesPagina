@@ -42,8 +42,19 @@ export function Footer() {
           </nav>
         </div>
 
-        <div className="mt-10 border-t border-tinta/10 pt-6 text-xs text-tinta/40">
-          © {anio} {NOMBRE_NEGOCIO}. Todos los derechos reservados.
+        <div className="mt-10 flex flex-col gap-2 border-t border-tinta/10 pt-6 text-xs text-tinta/40 sm:flex-row sm:items-center sm:justify-between">
+          <span>© {anio} {NOMBRE_NEGOCIO}. Todos los derechos reservados.</span>
+          <span>
+            Trabajo realizado por{' '}
+            <a
+              href="https://justinosantos.vercel.app/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="underline underline-offset-2 transition-colors duration-300 hover:text-tinta"
+            >
+              Justino Santos
+            </a>
+          </span>
         </div>
       </div>
     </footer>
