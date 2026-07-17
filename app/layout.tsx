@@ -25,11 +25,15 @@ const playfair = Playfair_Display({
 
 export const metadata: Metadata = {
   title: {
-    default: `${NOMBRE_NEGOCIO} — Mates, bombillas y accesorios`,
+    default: NOMBRE_NEGOCIO,
     template: `%s · ${NOMBRE_NEGOCIO}`,
   },
   description:
     'Yerberas, bombillas, mates, termos y accesorios. Elegí tus productos y coordiná tu pedido por WhatsApp.',
+  icons: {
+    icon: '/logo.png',
+    apple: '/logo.png',
+  },
 };
 
 export const viewport: Viewport = {
