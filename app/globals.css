@@ -368,8 +368,35 @@ body {
   animation: menu-panel 0.38s cubic-bezier(0.22, 1, 0.36, 1) backwards;
 }
 
-/* NOTA: no hay bloque de prefers-reduced-motion a propósito. En muchos
-   Android el ahorro de batería activa esa preferencia y clavaba TODAS las
-   animaciones en 0.01ms: el sitio entero aparecía de golpe y los elementos
-   con animation-delay quedaban invisibles hasta su turno (parpadeo). Las
-   animaciones de este sitio son la identidad visual y deben correr siempre. */
+/* SALVAGUARDA DE VISIBILIDAD (crítica en iPhone).
+   Las animaciones de entrada arrancan en opacity:0 con fill "both", así que su
+   estado PREVIO (backwards) también es invisible. Si el sistema NO ejecuta la
+   animación —iOS/Android con "Reducir movimiento" activado, o el ahorro de
+   batería/Modo de bajo consumo que lo activa— el contenido queda clavado en
+   opacity:0: pantalla en blanco/negra, "no se ve absolutamente nada".
+
+   Este bloque NO es el viejo limitador de 0.01ms (que causaba el parpadeo):
+   acá NO se acortan las animaciones, sólo se garantiza que, cuando el sistema
+   las bloquea, el contenido igual se muestre en su estado final. En equipos
+   sin esa preferencia, las animaciones corren completas (la identidad intacta).
+
+   Para VER las animaciones en el iPhone hay que desactivar Ajustes →
+   Accesibilidad → Movimiento → "Reducir movimiento" (y salir del Modo de bajo
+   consumo). Una web no puede forzar el movimiento si el sistema lo bloquea. */
+@media (prefers-reduced-motion: reduce) {
+  .animate-entrada,
+  .animate-aparecer,
+  .animate-subir-mascara,
+  .animate-pop,
+  .animate-crecer,
+  .item-entra,
+  .ml-escena,
+  .ml-fondo-entra,
+  .ml-mate-entra,
+  .ml-bolsa-entra,
+  .ml-termo-entra {
+    animation: none !important;
+    opacity: 1 !important;
+    transform: none !important;
+  }
+}
