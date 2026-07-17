@@ -368,35 +368,55 @@ body {
   animation: menu-panel 0.38s cubic-bezier(0.22, 1, 0.36, 1) backwards;
 }
 
-/* SALVAGUARDA DE VISIBILIDAD (crítica en iPhone).
-   Las animaciones de entrada arrancan en opacity:0 con fill "both", así que su
-   estado PREVIO (backwards) también es invisible. Si el sistema NO ejecuta la
-   animación —iOS/Android con "Reducir movimiento" activado, o el ahorro de
-   batería/Modo de bajo consumo que lo activa— el contenido queda clavado en
-   opacity:0: pantalla en blanco/negra, "no se ve absolutamente nada".
+/* ====== VISIBILIDAD GARANTIZADA, SIN LIMITAR EL MOVIMIENTO ======
+   Las animaciones de entrada arrancan en opacity:0 (fill "both"), así que si
+   algo impide que corran, el contenido queda invisible (pantalla en blanco).
+   Antes esto se resolvía con @media (prefers-reduced-motion), pero eso APAGABA
+   las animaciones en teléfonos con "Reducir movimiento"/ahorro de batería.
+   Ya NO hay ningún limitador por preferencia de movimiento: las animaciones
+   corren SIEMPRE. La visibilidad se garantiza por dos caminos independientes:
 
-   Este bloque NO es el viejo limitador de 0.01ms (que causaba el parpadeo):
-   acá NO se acortan las animaciones, sólo se garantiza que, cuando el sistema
-   las bloquea, el contenido igual se muestre en su estado final. En equipos
-   sin esa preferencia, las animaciones corren completas (la identidad intacta).
+   1) Sin JavaScript (o antes de que corra): la clase .anim todavía no está en
+      <html>, así que el contenido se muestra directo (sin ocultarse). Un script
+      inline agrega .anim ANTES del primer pintado, habilitando las animaciones
+      en cuanto hay JS (o sea, siempre en un teléfono real). */
+html:not(.anim) .animate-entrada,
+html:not(.anim) .animate-aparecer,
+html:not(.anim) .animate-subir-mascara,
+html:not(.anim) .animate-pop,
+html:not(.anim) .animate-crecer,
+html:not(.anim) .item-entra,
+html:not(.anim) .ml-escena,
+html:not(.anim) .ml-fondo-entra,
+html:not(.anim) .ml-mate-entra,
+html:not(.anim) .ml-bolsa-entra,
+html:not(.anim) .ml-termo-entra {
+  animation: none !important;
+  opacity: 1 !important;
+  transform: none !important;
+}
 
-   Para VER las animaciones en el iPhone hay que desactivar Ajustes →
-   Accesibilidad → Movimiento → "Reducir movimiento" (y salir del Modo de bajo
-   consumo). Una web no puede forzar el movimiento si el sistema lo bloquea. */
-@media (prefers-reduced-motion: reduce) {
-  .animate-entrada,
-  .animate-aparecer,
-  .animate-subir-mascara,
-  .animate-pop,
-  .animate-crecer,
-  .item-entra,
-  .ml-escena,
-  .ml-fondo-entra,
-  .ml-mate-entra,
-  .ml-bolsa-entra,
-  .ml-termo-entra {
-    animation: none !important;
-    opacity: 1 !important;
-    transform: none !important;
-  }
+/* 2) Piso de seguridad GLOBAL: si por lo que sea una animación no llega a correr
+      (algún equipo que las congela), la clase `piso` en <html> —que agrega el JS
+      ~1.3s después de cargar cada ruta— deja el contenido en su estado visible.
+      Va en <html> (no en el wrapper de la página) porque el contenido dinámico
+      se transmite por streaming en un nodo suelto fuera de <main>; un selector
+      global lo alcanza igual. `animation:none` es lo que garantiza la
+      visibilidad: una animación con fill "backwards" (opacity:0) le gana a un
+      simple opacity:1 !important, así que hay que quitarla para que valga el
+      estado base visible. Para cuando cae el piso las entradas ya terminaron. */
+html.piso .animate-entrada,
+html.piso .animate-aparecer,
+html.piso .animate-subir-mascara,
+html.piso .animate-pop,
+html.piso .animate-crecer,
+html.piso .item-entra,
+html.piso .ml-escena,
+html.piso .ml-fondo-entra,
+html.piso .ml-mate-entra,
+html.piso .ml-bolsa-entra,
+html.piso .ml-termo-entra {
+  animation: none !important;
+  opacity: 1 !important;
+  transform: none !important;
 }

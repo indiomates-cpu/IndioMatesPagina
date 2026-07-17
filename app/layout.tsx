@@ -60,13 +60,15 @@ export default function RootLayout({
       data-scroll-behavior="smooth"
     >
       <body className="min-h-screen bg-papel font-sans text-tinta antialiased">
-        {/* Se ejecuta antes del primer pintado: si el loader ya se mostró en
-            esta sesión, lo oculta al instante (evita ver un frame del sitio
-            antes de que aparezca la pantalla de carga en la primera visita). */}
+        {/* Se ejecuta antes del primer pintado:
+            - .anim habilita las animaciones de entrada (sin JS el contenido se
+              muestra directo; con JS, se anima). Va primero e incondicional.
+            - loader-oculto: si el loader ya se mostró en esta sesión, lo oculta
+              al instante (evita ver un frame del sitio antes de la carga). */}
         <script
           dangerouslySetInnerHTML={{
             __html:
-              "(function(){try{if(sessionStorage.getItem('indio-loader-visto'))document.documentElement.classList.add('loader-oculto')}catch(e){}})()",
+              "(function(){document.documentElement.classList.add('anim');try{if(sessionStorage.getItem('indio-loader-visto'))document.documentElement.classList.add('loader-oculto')}catch(e){}})()",
           }}
         />
         <ProveedorMotion>{children}</ProveedorMotion>
