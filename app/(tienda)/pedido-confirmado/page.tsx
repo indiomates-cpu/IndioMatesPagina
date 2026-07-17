@@ -30,12 +30,17 @@ export default function PedidoConfirmadoPage() {
 
   return (
     <div className="mx-auto flex max-w-2xl flex-col items-center px-4 py-20 text-center sm:px-6">
-      {/* Check con onda expansiva sutil */}
+      {/* Check con onda expansiva sutil. animate-latido (y no un keyframe por
+          style inline): Tailwind sólo emite @keyframes si la clase se usa. */}
       <div className="relative animate-aparecer">
         <span
           aria-hidden
-          className="absolute inset-0 rounded-full border border-tinta/20"
-          style={{ animation: 'latido 2.4s ease-in-out infinite' }}
+          className="animate-latido absolute inset-0 rounded-full border border-tinta/20"
+          style={{
+            animationDuration: '2.4s',
+            animationTimingFunction: 'ease-in-out',
+            animationIterationCount: 'infinite',
+          }}
         />
         <div className="relative flex h-24 w-24 items-center justify-center rounded-full bg-tinta text-papel">
           <svg
@@ -67,27 +72,9 @@ export default function PedidoConfirmadoPage() {
         mensaje para que coordinemos el pago y la entrega.
       </p>
 
-      {montado && resumen && (
-        <div
-          className="animate-entrada mt-8 w-full max-w-sm rounded-2xl border border-tinta/10 bg-papel-hueso p-6 text-left"
-          style={{ animationDelay: '320ms' }}
-        >
-          <div className="flex items-center justify-between text-sm">
-            <span className="text-tinta/60">Productos</span>
-            <span className="font-medium">{resumen.cantidad}</span>
-          </div>
-          <div className="mt-3 flex items-center justify-between border-t border-tinta/10 pt-3">
-            <span className="text-tinta/60">Total del pedido</span>
-            <span className="font-display text-xl font-bold">
-              {formatearPrecio(resumen.total)}
-            </span>
-          </div>
-        </div>
-      )}
-
       <div
         className="animate-entrada mt-8 flex flex-wrap justify-center gap-3"
-        style={{ animationDelay: '420ms' }}
+        style={{ animationDelay: '320ms' }}
       >
         {montado && resumen?.link && (
           <a
@@ -106,6 +93,26 @@ export default function PedidoConfirmadoPage() {
           Seguir comprando
         </Link>
       </div>
+
+      {/* El resumen va al final: aparece un frame después de montar (lee
+          sessionStorage) y acá abajo su llegada no empuja los botones. */}
+      {montado && resumen && (
+        <div
+          className="animate-entrada mt-8 w-full max-w-sm rounded-2xl border border-tinta/10 bg-papel-hueso p-6 text-left"
+          style={{ animationDelay: '120ms' }}
+        >
+          <div className="flex items-center justify-between text-sm">
+            <span className="text-tinta/60">Productos</span>
+            <span className="font-medium">{resumen.cantidad}</span>
+          </div>
+          <div className="mt-3 flex items-center justify-between border-t border-tinta/10 pt-3">
+            <span className="text-tinta/60">Total del pedido</span>
+            <span className="font-display text-xl font-bold">
+              {formatearPrecio(resumen.total)}
+            </span>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

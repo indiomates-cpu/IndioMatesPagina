@@ -107,7 +107,8 @@ export function ProductCard({
               sinStock ? 'Sin stock' : `Agregar ${producto.nombre} al carrito`
             }
             className={cn(
-              'inline-flex h-9 w-full items-center justify-center gap-1.5 rounded-lg px-3 text-sm font-medium text-papel transition-all duration-300 ease-premium disabled:cursor-not-allowed disabled:bg-tinta/20 disabled:text-tinta/40 disabled:shadow-none sm:w-auto sm:min-w-[9rem]',
+              // relative: ancla el popLayout de la etiqueta saliente al botón.
+              'relative inline-flex h-9 w-full items-center justify-center gap-1.5 rounded-lg px-3 text-sm font-medium text-papel transition-all duration-300 ease-premium disabled:cursor-not-allowed disabled:bg-tinta/20 disabled:text-tinta/40 disabled:shadow-none sm:w-auto sm:min-w-[9rem]',
               agregado
                 ? 'bg-green-600 shadow-flotante-sm'
                 : 'bg-tinta hover:bg-tinta-suave hover:shadow-flotante-sm'

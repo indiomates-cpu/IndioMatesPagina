@@ -8,12 +8,7 @@ import { formatearPrecio } from '@/lib/utils';
 import { IMAGEN_PLACEHOLDER } from '@/lib/constants';
 import { useConfirmarPedido } from '@/hooks/useConfirmarPedido';
 import { MateIcono } from '@/components/mate/MateIcono';
-import {
-  EASE_PREMIUM,
-  RESORTE_PANEL,
-  listaEscalonada,
-  itemLista,
-} from '@/lib/motion';
+import { EASE_PREMIUM, RESORTE_PANEL } from '@/lib/motion';
 import { QuantityStepper } from './QuantityStepper';
 
 export function CartDrawer() {
@@ -30,9 +25,11 @@ export function CartDrawer() {
     <AnimatePresence>
       {abierto && (
         <>
-          {/* Fondo oscuro */}
+          {/* Fondo oscuro. Blur sólo en desktop: animar la opacidad de una
+              capa con backdrop-filter re-blurea el viewport entero por frame
+              y tira la apertura del drawer en la GPU del teléfono. */}
           <motion.div
-            className="fixed inset-0 z-40 bg-tinta/50 backdrop-blur-sm"
+            className="fixed inset-0 z-40 bg-tinta/60 md:bg-tinta/50 md:backdrop-blur-sm"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
@@ -67,14 +64,11 @@ export function CartDrawer() {
             </header>
 
             {items.length === 0 ? (
-              <motion.div
-                className="flex flex-1 flex-col items-center justify-center gap-3 px-6 text-center text-tinta/60"
-                variants={listaEscalonada}
-                initial="oculto"
-                animate="visible"
-              >
+              /* Entradas por CSS: las variants de montaje de framer podían
+                 dejar este contenido invisible dentro del drawer abierto. */
+              <div className="flex flex-1 flex-col items-center justify-center gap-3 px-6 text-center text-tinta/60">
                 {/* Mate vacío con su vapor, esperando compañía. */}
-                <motion.div variants={itemLista} className="relative">
+                <div className="animate-entrada relative">
                   <div className="absolute -top-4 left-1/2 flex -translate-x-1/2 gap-1">
                     {[0, 1].map((i) => (
                       <span
@@ -85,11 +79,17 @@ export function CartDrawer() {
                     ))}
                   </div>
                   <MateIcono className="h-12 w-12 text-tinta/25" />
-                </motion.div>
-                <motion.p variants={itemLista} className="text-sm">
+                </div>
+                <p
+                  className="animate-entrada text-sm"
+                  style={{ animationDelay: '80ms' }}
+                >
                   Tu carrito está vacío.
-                </motion.p>
-                <motion.div variants={itemLista}>
+                </p>
+                <div
+                  className="animate-entrada"
+                  style={{ animationDelay: '160ms' }}
+                >
                   <Link
                     href="/productos"
                     onClick={cerrar}
@@ -97,28 +97,28 @@ export function CartDrawer() {
                   >
                     Ver productos
                   </Link>
-                </motion.div>
-              </motion.div>
+                </div>
+              </div>
             ) : (
               <>
-                <motion.ul
-                  className="flex-1 divide-y divide-tinta/10 overflow-y-auto px-5"
-                  variants={listaEscalonada}
-                  initial="oculto"
-                  animate="visible"
-                >
+                {/* `relative` es clave: popLayout posiciona el ítem saliente
+                    con absolute respecto del ancestro posicionado más cercano;
+                    sin esto usaba el aside y el ítem saltaba al quitarlo. La
+                    entrada va por CSS (item-entra, fill backwards para no
+                    pisar el fade de salida de framer). */}
+                <ul className="relative flex-1 divide-y divide-tinta/10 overflow-y-auto px-5">
                   <AnimatePresence mode="popLayout" initial={false}>
-                    {items.map((item) => (
+                    {items.map((item, i) => (
                       <motion.li
                         key={item.id}
                         layout
-                        variants={itemLista}
                         exit={{
                           opacity: 0,
                           x: 48,
                           transition: { duration: 0.25, ease: 'easeIn' },
                         }}
-                        className="flex gap-3 py-4"
+                        className="item-entra flex gap-3 py-4"
+                        style={{ animationDelay: `${Math.min(i * 60, 360)}ms` }}
                       >
                         <Link
                           href={`/productos/${item.slug}`}
@@ -175,13 +175,14 @@ export function CartDrawer() {
                       </motion.li>
                     ))}
                   </AnimatePresence>
-                </motion.ul>
+                </ul>
 
                 <footer className="border-t border-tinta/10 px-5 py-4">
                   <div className="mb-4 flex items-center justify-between">
                     <span className="text-sm text-tinta/60">Subtotal</span>
-                    {/* El subtotal rueda como un odómetro al cambiar. */}
-                    <span className="block overflow-hidden">
+                    {/* El subtotal rueda como un odómetro al cambiar. relative
+                        ancla el popLayout del número saliente a la máscara. */}
+                    <span className="relative block overflow-hidden">
                       <AnimatePresence mode="popLayout" initial={false}>
                         <motion.span
                           key={total}

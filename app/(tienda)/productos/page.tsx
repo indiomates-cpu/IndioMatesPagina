@@ -48,10 +48,11 @@ export default async function ProductosPage({
           No hay productos en esta categoría por el momento.
         </div>
       ) : (
-        // `key` fuerza a reiniciar el revelado ("Ver más") al cambiar de
-        // categoría u orden, para que cada vista arranque colapsada.
+        // `firma` reinicia el revelado ("Ver más") al cambiar de categoría u
+        // orden SIN remontar la grilla: con key, cada filtro hacía parpadear
+        // todas las tarjetas (volvían a opacity 0 y re-animaban su entrada).
         <ProductGrid
-          key={`${categoria ?? 'todos'}-${orden ?? 'novedades'}`}
+          firma={`${categoria ?? 'todos'}-${orden ?? 'novedades'}`}
           productos={productos}
         />
       )}

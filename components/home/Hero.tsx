@@ -14,13 +14,12 @@ export function Hero() {
       <div className="relative mx-auto grid max-w-6xl gap-8 px-4 py-10 sm:px-6 md:grid-cols-2 md:items-center md:py-8">
         <div>
           <span className="animate-entrada relative inline-block overflow-hidden rounded-full border border-papel/20 px-3 py-1 text-xs uppercase tracking-widest text-papel/70">
+            {/* animate-brillo (y no un keyframe por style inline): Tailwind
+                sólo emite @keyframes si la clase se usa en algún archivo. */}
             <span
               aria-hidden
-              className="absolute inset-y-0 left-0 w-1/2 bg-gradient-to-r from-transparent via-papel/10 to-transparent"
-              style={{
-                animation:
-                  'brillo 5.5s cubic-bezier(0.22, 1, 0.36, 1) 2s infinite',
-              }}
+              className="animate-brillo absolute inset-y-0 left-0 w-1/2 bg-gradient-to-r from-transparent via-papel/10 to-transparent"
+              style={{ animationDuration: '5.5s', animationDelay: '2s' }}
             />
             🧉 Cultura matera argentina
           </span>

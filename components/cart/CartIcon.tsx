@@ -73,16 +73,16 @@ export function CartIcon() {
         </svg>
       </motion.span>
 
+      {/* Entrada por CSS (animate-pop): la de montaje de framer no dispara
+          confiablemente en este stack y dejaba el contador invisible. El
+          key remonta el span en cada cambio y la animación CSS re-corre. */}
       {montado && cantidad > 0 && (
-        <motion.span
+        <span
           key={cantidad}
-          initial={{ scale: 0.4, y: -4, opacity: 0 }}
-          animate={{ scale: 1, y: 0, opacity: 1 }}
-          transition={RESORTE_POP}
-          className="absolute -right-1 -top-1 flex h-5 min-w-[1.25rem] items-center justify-center rounded-full bg-tinta px-1 text-[11px] font-semibold text-papel ring-2 ring-papel"
+          className="animate-pop absolute -right-1 -top-1 flex h-5 min-w-[1.25rem] items-center justify-center rounded-full bg-tinta px-1 text-[11px] font-semibold text-papel ring-2 ring-papel"
         >
           {cantidad}
-        </motion.span>
+        </span>
       )}
     </motion.button>
   );

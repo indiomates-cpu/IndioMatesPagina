@@ -38,8 +38,10 @@ export function ProductGallery({
   const indiceSeguro = Math.min(indice, lista.length - 1);
   const actual = lista[indiceSeguro];
 
+  // Blur sólo en desktop: en mobile las flechas flotan sobre la imagen que se
+  // anima en cada swipe y el backdrop-filter re-blurea por frame (jank).
   const flecha =
-    'absolute top-1/2 flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full bg-papel/80 backdrop-blur transition-all duration-300 ease-premium hover:bg-papel hover:shadow-flotante-sm active:scale-90 md:opacity-0 md:group-hover:opacity-100';
+    'absolute top-1/2 flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full bg-papel/90 transition-all duration-300 ease-premium hover:bg-papel hover:shadow-flotante-sm active:scale-90 md:bg-papel/80 md:backdrop-blur md:opacity-0 md:group-hover:opacity-100';
 
   return (
     <div className="flex flex-col gap-3">

@@ -55,7 +55,8 @@ export function AddToCartSection({ producto }: { producto: ProductoDTO }) {
         whileTap={{ scale: 0.97 }}
         onClick={handleAgregar}
         className={cn(
-          'flex flex-1 items-center justify-center gap-2 rounded-xl py-4 font-medium text-papel transition-all duration-300 ease-premium active:translate-y-0 active:shadow-none',
+          // relative: ancla el popLayout de la etiqueta saliente al botón.
+          'relative flex flex-1 items-center justify-center gap-2 rounded-xl py-4 font-medium text-papel transition-all duration-300 ease-premium active:translate-y-0 active:shadow-none',
           agregado
             ? 'bg-green-600 shadow-flotante'
             : 'bg-tinta hover:-translate-y-0.5 hover:bg-tinta-suave hover:shadow-flotante'

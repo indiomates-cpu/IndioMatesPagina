@@ -17,14 +17,23 @@ import { EASE_PREMIUM } from '@/lib/motion';
 // odómetro del subtotal y el tap del botón. Las animaciones de MONTAJE de
 // framer no son confiables en este stack y dejaban invisibles el resumen y el
 // botón de confirmar.
+// El esqueleto sólo hace falta en la PRIMERA hidratación del documento (el
+// server no conoce el carrito de localStorage). En navegaciones cliente
+// posteriores el store ya está hidratado: pintarlo era un parpadeo puro en
+// cada visita a /carrito.
+let yaHidratado = false;
+
 export default function CarritoPage() {
   const items = useCarrito((e) => e.items);
   const quitar = useCarrito((e) => e.quitar);
   const cambiarCantidad = useCarrito((e) => e.cambiarCantidad);
   const { confirmar, procesando } = useConfirmarPedido();
 
-  const [montado, setMontado] = useState(false);
-  useEffect(() => setMontado(true), []);
+  const [montado, setMontado] = useState(yaHidratado);
+  useEffect(() => {
+    yaHidratado = true;
+    setMontado(true);
+  }, []);
 
   const total = calcularTotal(items);
 
@@ -151,8 +160,9 @@ export default function CarritoPage() {
           <h2 className="font-display text-lg font-semibold">Resumen del pedido</h2>
           <div className="mt-4 flex items-center justify-between border-t border-tinta/10 pt-4">
             <span className="text-tinta/60">Subtotal</span>
-            {/* El subtotal rueda como un odómetro al cambiar. */}
-            <span className="block overflow-hidden">
+            {/* El subtotal rueda como un odómetro al cambiar. relative ancla
+                el popLayout del número saliente a la máscara. */}
+            <span className="relative block overflow-hidden">
               <AnimatePresence mode="popLayout" initial={false}>
                 <motion.span
                   key={total}

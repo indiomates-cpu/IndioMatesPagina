@@ -59,9 +59,11 @@ export function QuantityStepper({
       >
         −
       </motion.button>
+      {/* relative: ancla el popLayout del número saliente a esta máscara
+          (sin él, el número saltaba fuera del stepper al cambiar). */}
       <span
         className={cn(
-          'flex items-center justify-center overflow-hidden text-center font-medium tabular-nums',
+          'relative flex items-center justify-center overflow-hidden text-center font-medium tabular-nums',
           numDim
         )}
         aria-live="polite"

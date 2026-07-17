@@ -5,6 +5,12 @@ const config: Config = {
     './app/**/*.{js,ts,jsx,tsx,mdx}',
     './components/**/*.{js,ts,jsx,tsx,mdx}',
   ],
+  future: {
+    // En touch, el tap emulaba :hover y dejaba tarjetas "flotando", imágenes
+    // zoomeadas y botones invertidos hasta tocar otra cosa. Con esto las
+    // variantes hover: sólo aplican en dispositivos con puntero real.
+    hoverOnlyWhenSupported: true,
+  },
   theme: {
     extend: {
       colors: {
@@ -85,6 +91,12 @@ const config: Config = {
           from: { transform: 'scaleX(0)' },
           to: { transform: 'scaleX(1)' },
         },
+        // Pop de entrada para badges (contador del carrito): reemplaza a la
+        // animación de montaje de framer, que no dispara confiablemente.
+        pop: {
+          from: { opacity: '0', transform: 'scale(0.4) translateY(-4px)' },
+          to: { opacity: '1', transform: 'scale(1) translateY(0)' },
+        },
       },
       animation: {
         vapor: 'vapor 2.6s ease-in-out infinite',
@@ -99,6 +111,7 @@ const config: Config = {
         brillo: 'brillo 2.8s cubic-bezier(0.22, 1, 0.36, 1) infinite',
         'girar-lento': 'girar-lento 14s linear infinite',
         crecer: 'crecer 0.9s cubic-bezier(0.22, 1, 0.36, 1) both',
+        pop: 'pop 0.35s cubic-bezier(0.34, 1.56, 0.64, 1) both',
       },
     },
   },

@@ -51,6 +51,13 @@ export default function RootLayout({
     <html
       lang="es"
       className={`${inter.variable} ${spaceGrotesk.variable} ${playfair.variable}`}
+      // El script de abajo puede agregar .loader-oculto ANTES de hidratar;
+      // sin esto React marca la diferencia de className como error en consola.
+      suppressHydrationWarning
+      // Le avisa a Next que el smooth scroll es intencional: así fuerza scroll
+      // instantáneo al navegar (sin la animación de "subir hasta arriba") y
+      // el suave queda sólo para anclas como #categorias.
+      data-scroll-behavior="smooth"
     >
       <body className="min-h-screen bg-papel font-sans text-tinta antialiased">
         {/* Se ejecuta antes del primer pintado: si el loader ya se mostró en

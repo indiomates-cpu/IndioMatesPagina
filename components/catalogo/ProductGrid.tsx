@@ -8,8 +8,22 @@ import { PRODUCTOS_POR_PAGINA } from '@/lib/constants';
 // Grilla de productos con revelado progresivo: muestra un máximo inicial y,
 // si hay más, un botón "Ver más" que despliega el resto (ya están
 // descargados de antemano, así que no hace falta pedir nada al servidor).
-export function ProductGrid({ productos }: { productos: ProductoDTO[] }) {
+export function ProductGrid({
+  productos,
+  firma = '',
+}: {
+  productos: ProductoDTO[];
+  firma?: string;
+}) {
   const [cantidadVisible, setCantidadVisible] = useState(PRODUCTOS_POR_PAGINA);
+
+  // Cambió el filtro u orden: colapsa el revelado en el mismo render (patrón
+  // de estado derivado de React), sin remontar la grilla ni sus tarjetas.
+  const [firmaPrevia, setFirmaPrevia] = useState(firma);
+  if (firma !== firmaPrevia) {
+    setFirmaPrevia(firma);
+    setCantidadVisible(PRODUCTOS_POR_PAGINA);
+  }
 
   const visibles = productos.slice(0, cantidadVisible);
   const restantes = productos.length - visibles.length;

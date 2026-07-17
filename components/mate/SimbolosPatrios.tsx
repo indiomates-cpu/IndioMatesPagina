@@ -89,7 +89,7 @@ export function SimbolosPatrios({
     <svg
       aria-hidden="true"
       className={cn(
-        'pointer-events-none absolute inset-0 h-full w-full',
+        'ml-fondo-entra pointer-events-none absolute inset-0 h-full w-full',
         className
       )}
       viewBox={fondo.viewBox}

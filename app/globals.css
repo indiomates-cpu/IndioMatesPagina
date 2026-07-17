@@ -87,7 +87,14 @@ body {
     transform-origin: right;
     transition: transform 0.35s cubic-bezier(0.22, 1, 0.36, 1);
   }
-  .enlace-subrayado:hover::after,
+  /* El hover sólo en dispositivos con puntero real: en touch el tap emulaba
+     el hover y el subrayado quedaba pegado tras cada toque. */
+  @media (hover: hover) {
+    .enlace-subrayado:hover::after {
+      transform: scaleX(1);
+      transform-origin: left;
+    }
+  }
   .enlace-subrayado[data-activo='true']::after {
     transform: scaleX(1);
     transform-origin: left;
@@ -120,6 +127,49 @@ body {
    que se vea un frame del sitio antes del loader en la primera visita. */
 .loader-oculto .mate-loader {
   display: none !important;
+}
+
+/* Red de seguridad SIN JavaScript para el loader: si la hidratación tarda o
+   falla (red lenta, JS bloqueado), el overlay se funde solo a los ~4.5s y
+   visibility:hidden lo saca del hit-test para que no trague los toques.
+   En el flujo normal el loader se desmonta a los ~2.5s y esto nunca corre. */
+@keyframes ml-failsafe {
+  to {
+    opacity: 0;
+    visibility: hidden;
+  }
+}
+.mate-loader {
+  animation: ml-failsafe 0.5s ease-out 4.5s forwards;
+}
+
+/* Entrada del contenido del loader: el fondo de íconos aparece en fundido
+   (sin esto, cada webp se pintaba de golpe apenas terminaba de bajar). */
+@keyframes ml-fondo-entra {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+.ml-fondo-entra {
+  animation: ml-fondo-entra 0.9s ease-out 0.15s both;
+}
+
+/* Entrada por CSS para ítems de listas que framer anima al salir (carrito).
+   fill backwards y NO forwards: al terminar libera la opacidad para no pisar
+   el fade de salida que framer aplica por style inline. */
+@keyframes item-entra {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+.item-entra {
+  animation: item-entra 0.4s ease-out backwards;
 }
 
 /* ---- Loader: el termo llena el mate de agua ---- */
@@ -318,13 +368,8 @@ body {
   animation: menu-panel 0.38s cubic-bezier(0.22, 1, 0.36, 1) backwards;
 }
 
-/* Respeta a quienes prefieren menos movimiento. */
-@media (prefers-reduced-motion: reduce) {
-  *,
-  *::before,
-  *::after {
-    animation-duration: 0.01ms !important;
-    animation-iteration-count: 1 !important;
-    transition-duration: 0.01ms !important;
-  }
-}
+/* NOTA: no hay bloque de prefers-reduced-motion a propósito. En muchos
+   Android el ahorro de batería activa esa preferencia y clavaba TODAS las
+   animaciones en 0.01ms: el sitio entero aparecía de golpe y los elementos
+   con animation-delay quedaban invisibles hasta su turno (parpadeo). Las
+   animaciones de este sitio son la identidad visual y deben correr siempre. */
