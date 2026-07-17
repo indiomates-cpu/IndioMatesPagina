@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import { MateIcono } from '@/components/mate/MateIcono';
+import Image from 'next/image';
 import { NOMBRE_NEGOCIO } from '@/lib/constants';
 
 export function Footer() {
@@ -11,8 +11,14 @@ export function Footer() {
         <div className="flex flex-col gap-8 md:flex-row md:justify-between">
           <div className="max-w-xs">
             <div className="group flex items-center gap-2.5">
-              <span className="flex h-9 w-9 items-center justify-center rounded-full bg-tinta text-papel transition-transform duration-300 ease-premium group-hover:-rotate-6 group-hover:scale-105">
-                <MateIcono className="h-5 w-5" />
+              <span className="relative h-9 w-9 shrink-0 transition-transform duration-300 ease-premium group-hover:-rotate-6 group-hover:scale-105">
+                <Image
+                  src="/logo.png"
+                  alt={NOMBRE_NEGOCIO}
+                  fill
+                  sizes="36px"
+                  className="object-contain"
+                />
               </span>
               <span className="font-display text-lg font-bold">{NOMBRE_NEGOCIO}</span>
             </div>

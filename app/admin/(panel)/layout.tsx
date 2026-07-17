@@ -1,9 +1,9 @@
 import { redirect } from 'next/navigation';
 import Link from 'next/link';
+import Image from 'next/image';
 import { getAdminSession } from '@/lib/session';
 import { AdminNav } from '@/components/admin/AdminNav';
 import { LogoutButton } from '@/components/admin/LogoutButton';
-import { MateIcono } from '@/components/mate/MateIcono';
 import { NOMBRE_NEGOCIO } from '@/lib/constants';
 
 export const dynamic = 'force-dynamic';
@@ -22,8 +22,14 @@ export default async function PanelLayout({
       <aside className="sticky top-0 z-20 flex flex-col gap-4 bg-tinta p-4 text-papel md:static md:min-h-screen md:gap-6 md:p-5">
         <div className="flex items-center justify-between">
           <Link href="/admin" className="group flex items-center gap-2">
-            <span className="flex h-8 w-8 items-center justify-center rounded-full bg-papel text-tinta transition-transform duration-300 ease-premium group-hover:-rotate-6 group-hover:scale-105">
-              <MateIcono className="h-5 w-5" />
+            <span className="relative h-8 w-8 shrink-0 transition-transform duration-300 ease-premium group-hover:-rotate-6 group-hover:scale-105">
+              <Image
+                src="/logo.png"
+                alt={NOMBRE_NEGOCIO}
+                fill
+                sizes="32px"
+                className="object-contain"
+              />
             </span>
             <span className="font-display text-sm font-bold leading-tight">
               {NOMBRE_NEGOCIO}
