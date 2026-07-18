@@ -24,7 +24,7 @@ const SOCIOS: Socio[] = [
   {
     nombre: 'Lautaro',
     rol: 'Co-fundador',
-    descripcion: 'A definir según lo que quieras contar de él, o dejarlo vacío.',
+    descripcion: 'dsada',
     foto: '/lautaro.jpg',
     },
   {

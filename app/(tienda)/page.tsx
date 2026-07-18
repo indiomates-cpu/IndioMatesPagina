@@ -3,6 +3,12 @@ import { Hero } from '@/components/home/Hero';
 import { ProductCard } from '@/components/producto/ProductCard';
 import { obtenerDestacados, obtenerCategoriasConConteo } from '@/lib/queries';
 
+// Fondos de la sección "Explorá por categoría". Reemplazar por la ruta
+// correspondiente (ej: '/categorias-bg-mobile.png') una vez que las
+// imágenes estén en /public.
+const CATEGORIAS_BG_MOBILE = '/mobile.png';
+const CATEGORIAS_BG_DESKTOP = '/desktop.png';
+
 export default async function HomePage() {
   const [destacados, categorias] = await Promise.all([
     obtenerDestacados(8),
@@ -58,9 +64,28 @@ export default async function HomePage() {
       {/* Categorías */}
       <section
         id="categorias"
-        className="border-t border-tinta/10 bg-papel-hueso"
+        className="relative overflow-hidden border-t border-tinta/10 bg-papel-hueso"
       >
-        <div className="mx-auto max-w-6xl px-4 py-16 sm:px-6">
+        {/* Fondo mobile */}
+        {CATEGORIAS_BG_MOBILE && (
+          <div
+            className="absolute inset-0 bg-cover bg-center sm:hidden"
+            style={{ backgroundImage: `url(${CATEGORIAS_BG_MOBILE})` }}
+          />
+        )}
+        {/* Fondo desktop */}
+        {CATEGORIAS_BG_DESKTOP && (
+          <div
+            className="absolute inset-0 hidden bg-cover bg-center sm:block"
+            style={{ backgroundImage: `url(${CATEGORIAS_BG_DESKTOP})` }}
+          />
+        )}
+        {/* Overlay para que el texto y las tarjetas sigan siendo legibles */}
+        {(CATEGORIAS_BG_MOBILE || CATEGORIAS_BG_DESKTOP) && (
+          <div className="absolute inset-0 bg-papel-hueso/85" />
+        )}
+
+        <div className="relative mx-auto max-w-6xl px-4 py-16 sm:px-6">
           <h2 className="mb-8 font-display text-2xl font-bold sm:text-3xl">
             Explorá por categoría
           </h2>
