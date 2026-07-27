@@ -63,6 +63,7 @@ export function ProductCard({
             alt={producto.nombre}
             fill
             sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
+            quality={90}
             className={`object-cover transition-transform duration-700 ease-premium group-hover:scale-[1.06] ${
               sinStock ? 'opacity-60 grayscale' : ''
             }`}

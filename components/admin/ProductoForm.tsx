@@ -18,9 +18,12 @@ import {
   useSortable,
 } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
+import type { Area } from 'react-easy-crop';
 import type { CategoriaDTO, ProductoDTO } from '@/lib/types';
 import { cn } from '@/lib/utils';
 import { calcularDescuentoPorcentaje } from '@/lib/constants';
+import { recortarImagen } from '@/lib/cropImage';
+import { ImageCropModal } from './ImageCropModal';
 
 interface ImagenLocal {
   url: string;
@@ -73,6 +76,12 @@ export function ProductoForm({
   const fileRef = useRef<HTMLInputElement>(null);
   const keyCounter = useRef(0);
 
+  // Cola de archivos elegidos (puede ser más de uno): se recorta y sube de a
+  // uno, mostrando el modal de recorte para el archivo actual de la cola.
+  const [cola, setCola] = useState<File[]>([]);
+  const [colaTotal, setColaTotal] = useState(0);
+  const [previewUrl, setPreviewUrl] = useState<string | null>(null);
+
   useEffect(() => {
     fetch('/api/admin/upload')
       .then((r) => r.json())
@@ -93,23 +102,54 @@ export function ProductoForm({
     setUrlNueva('');
   }
 
-  async function subirArchivo(e: React.ChangeEvent<HTMLInputElement>) {
-    const file = e.target.files?.[0];
-    if (!file) return;
+  // Selección de uno o varios archivos: arrancan la cola de recorte. El
+  // recorte de cada uno se confirma en el modal antes de subirlo.
+  function elegirArchivos(e: React.ChangeEvent<HTMLInputElement>) {
+    const files = Array.from(e.target.files ?? []);
+    if (files.length === 0) return;
+    setColaTotal(files.length);
+    setCola(files);
+    setPreviewUrl(URL.createObjectURL(files[0]));
+    if (fileRef.current) fileRef.current.value = '';
+  }
+
+  function cerrarCropModal() {
+    if (previewUrl) URL.revokeObjectURL(previewUrl);
+    setPreviewUrl(null);
+    setCola([]);
+    setColaTotal(0);
+  }
+
+  async function confirmarRecorte(area: Area) {
+    const archivoActual = cola[0];
+    if (!archivoActual || !previewUrl) return;
+
     setSubiendo(true);
     setError(null);
     try {
+      const blob = await recortarImagen(previewUrl, area);
       const fd = new FormData();
-      fd.append('file', file);
+      fd.append('file', blob, archivoActual.name.replace(/\.[^.]+$/, '') + '.jpg');
       const res = await fetch('/api/admin/upload', { method: 'POST', body: fd });
       const data = await res.json().catch(() => ({}));
       if (!res.ok) throw new Error(data.error ?? 'Error al subir');
       setImagenes((prev) => [...prev, { url: data.url, key: nuevaKey() }]);
+
+      URL.revokeObjectURL(previewUrl);
+      const resto = cola.slice(1);
+      if (resto.length > 0) {
+        setCola(resto);
+        setPreviewUrl(URL.createObjectURL(resto[0]));
+      } else {
+        setCola([]);
+        setColaTotal(0);
+        setPreviewUrl(null);
+      }
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Error al subir la imagen');
+      cerrarCropModal();
     } finally {
       setSubiendo(false);
-      if (fileRef.current) fileRef.current.value = '';
     }
   }
 
@@ -290,10 +330,17 @@ export function ProductoForm({
                 ref={fileRef}
                 type="file"
                 accept="image/*"
-                onChange={subirArchivo}
-                disabled={subiendo}
+                multiple
+                onChange={elegirArchivos}
+                disabled={subiendo || cola.length > 0}
                 className="block w-full text-sm text-tinta/60 file:mr-3 file:rounded-lg file:border-0 file:bg-tinta file:px-4 file:py-2 file:text-sm file:font-medium file:text-papel hover:file:bg-tinta-suave"
               />
+              <p className="mt-1 text-xs text-tinta/50">
+                Podés elegir varias fotos a la vez. Cada una se recorta antes
+                de subirse. En iPhone: tocá <strong>&quot;Seleccionar&quot;</strong>{' '}
+                arriba a la derecha del selector de fotos antes de tocar las
+                imágenes; si tocás una foto directamente, solo se elige esa.
+              </p>
               {subiendo && (
                 <p className="mt-1 text-xs text-tinta/50">Subiendo imagen…</p>
               )}
@@ -441,6 +488,17 @@ export function ProductoForm({
           Cancelar
         </button>
       </aside>
+
+      {previewUrl && cola[0] && (
+        <ImageCropModal
+          src={previewUrl}
+          nombreArchivo={cola[0].name}
+          indice={colaTotal - cola.length}
+          total={colaTotal}
+          onConfirmar={confirmarRecorte}
+          onCancelar={cerrarCropModal}
+        />
+      )}
     </form>
   );
 }

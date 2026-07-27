@@ -30,7 +30,17 @@ export async function subirImagen(
 
   return new Promise<string>((resolve, reject) => {
     const stream = cloudinary.uploader.upload_stream(
-      { folder: carpeta, resource_type: 'image' },
+      {
+        folder: carpeta,
+        resource_type: 'image',
+        // Limita el ancho máximo (sin agrandar imágenes chicas) y deja que
+        // Cloudinary elija automáticamente la mejor calidad y el mejor
+        // formato (WebP/AVIF) según el navegador que la pida.
+        transformation: [
+          { width: 2000, crop: 'limit' },
+          { quality: 90, fetch_format: 'auto' },
+        ],
+      },
       (error, result) => {
         if (error || !result) {
           reject(error ?? new Error('Error subiendo la imagen a Cloudinary.'));

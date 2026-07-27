@@ -69,6 +69,7 @@ export function ProductGallery({
               alt={`${nombre} — imagen ${indiceSeguro + 1}`}
               fill
               sizes="(max-width: 1024px) 100vw, 50vw"
+              quality={92}
               className="pointer-events-none object-cover"
               priority
             />
@@ -134,6 +135,7 @@ export function ProductGallery({
                 alt={`${nombre} miniatura ${i + 1}`}
                 fill
                 sizes="64px"
+                quality={85}
                 className="object-cover"
               />
             </button>
