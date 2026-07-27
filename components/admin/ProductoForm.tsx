@@ -5,7 +5,8 @@ import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import {
   DndContext,
-  PointerSensor,
+  MouseSensor,
+  TouchSensor,
   closestCenter,
   useSensor,
   useSensors,
@@ -168,9 +169,16 @@ export function ProductoForm({
     });
   }
 
-  // Arrastre (dnd-kit): la distancia mínima evita que un tap cuente como drag.
+  // Arrastre (dnd-kit): PointerSensor no dispara de forma confiable en
+  // Safari iOS (bug conocido de dnd-kit con Pointer Events touch), así que
+  // usamos Mouse+Touch por separado. En touch hace falta un pequeño delay
+  // (en vez de una distancia) para poder distinguir el drag de un scroll de
+  // la página con el dedo.
   const sensores = useSensors(
-    useSensor(PointerSensor, { activationConstraint: { distance: 6 } })
+    useSensor(MouseSensor, { activationConstraint: { distance: 6 } }),
+    useSensor(TouchSensor, {
+      activationConstraint: { delay: 150, tolerance: 8 },
+    })
   );
 
   function alTerminarArrastre(e: DragEndEvent) {
