@@ -1,7 +1,6 @@
 import type { Metadata } from 'next';
 import Image from 'next/image';
 import Link from 'next/link';
-import { cn } from '@/lib/utils';
 
 export const metadata: Metadata = {
   title: 'Quiénes somos',
@@ -9,30 +8,18 @@ export const metadata: Metadata = {
     'Conocé la filosofía detrás de Indio Mates: selección cuidada, cultura matera y trato directo.',
 };
 
-// Datos de los socios. Para cargar la foto de cada uno:
-//   1) poné el archivo en la carpeta /public (ej: /public/socios/juan.jpg)
-//   2) escribí esa ruta en `foto` (ej: foto: '/socios/juan.jpg')
-// Mientras `foto` sea null, el recuadro muestra las iniciales como placeholder.
+// Foto conjunta de los dos socios. Para reemplazarla, poné el archivo en
+// /public y actualizá la ruta acá.
+const FOTO_SOCIOS = '/quienes-somos.jpg';
+
 interface Socio {
   nombre: string;
   rol: string;
-  descripcion?: string;
-  foto?: string | null;
 }
 
 const SOCIOS: Socio[] = [
-  {
-    nombre: 'Lautaro',
-    rol: 'Co-fundador',
-    descripcion: 'dsada',
-    foto: '/lautaro.jpg',
-    },
-  {
-    nombre: 'Lucio',
-    rol: 'Co-fundador',
-    descripcion: 'A definir según lo que quieras contar de él, o dejarlo vacío.',
-    foto: '/lucio.jpg',
-  },
+  { nombre: 'Lautaro', rol: 'Co-fundador' },
+  { nombre: 'Lucio', rol: 'Co-fundador' },
 ];
 
 const VALORES = [
@@ -91,18 +78,39 @@ export default function QuienesSomosPage() {
         </div>
       </section>
 
-      {/* Historia, con un socio a cada lado del texto */}
+      {/* Historia, con la foto de los socios junto al texto */}
       <section className="mx-auto max-w-6xl px-4 py-14 sm:px-6">
-        <div className="grid gap-8 lg:grid-cols-[1fr_1.5fr_1fr] lg:items-center lg:gap-10">
-          {/* Socio izquierda */}
-          <SocioCard
-            socio={SOCIOS[0]}
-            delay={120}
-            className="order-2 lg:order-1"
-          />
+        <div className="grid gap-10 lg:grid-cols-[1fr_1.2fr] lg:items-center">
+          {/* Foto de los socios */}
+          <figure
+            className="elevable animate-entrada mx-auto w-full max-w-sm rounded-2xl border border-tinta/10 bg-papel p-3 lg:max-w-none"
+            style={{ animationDelay: '120ms' }}
+          >
+            <div className="relative aspect-[4/5] overflow-hidden rounded-xl bg-papel-hueso">
+              <Image
+                src={FOTO_SOCIOS}
+                alt={`${SOCIOS[0].nombre} y ${SOCIOS[1].nombre}, fundadores de Indio Mates`}
+                fill
+                sizes="(max-width: 1024px) 90vw, 480px"
+                className="object-cover"
+                priority
+              />
+            </div>
+            <figcaption className="px-1 pb-1 pt-4 text-center">
+              <p className="font-display text-lg font-semibold">
+                {SOCIOS.map((s) => s.nombre).join(' & ')}
+              </p>
+              <p className="mt-0.5 text-xs uppercase tracking-widest text-tinta/50">
+                Co-fundadores
+              </p>
+            </figcaption>
+          </figure>
 
-          {/* Texto de la historia (centro) */}
-          <div className="animate-entrada order-1 space-y-4 leading-relaxed text-tinta/70 lg:order-2">
+          {/* Texto de la historia */}
+          <div
+            className="animate-entrada space-y-4 leading-relaxed text-tinta/70"
+            style={{ animationDelay: '200ms' }}
+          >
             <p>
               <strong className="text-tinta">Indio Mates</strong> arrancó como
               una selección personal de mates, bombillas, yerberas y termos que
@@ -116,13 +124,6 @@ export default function QuienesSomosPage() {
               directamente con nosotros por WhatsApp.
             </p>
           </div>
-
-          {/* Socio derecha */}
-          <SocioCard
-            socio={SOCIOS[1]}
-            delay={200}
-            className="order-3"
-          />
         </div>
       </section>
 
@@ -188,66 +189,3 @@ export default function QuienesSomosPage() {
   );
 }
 
-// Iniciales para el placeholder cuando todavía no hay foto cargada.
-function iniciales(nombre: string): string {
-  return nombre
-    .split(' ')
-    .filter(Boolean)
-    .slice(0, 2)
-    .map((p) => p[0])
-    .join('')
-    .toUpperCase();
-}
-
-// Recuadro de un socio: foto (o placeholder con iniciales), nombre, rol y datos.
-function SocioCard({
-  socio,
-  delay,
-  className,
-}: {
-  socio: Socio;
-  delay: number;
-  className?: string;
-}) {
-  return (
-    <figure
-      className={cn(
-        'elevable animate-entrada mx-auto w-full max-w-xs rounded-2xl border border-tinta/10 bg-papel p-3 text-center lg:max-w-none',
-        className
-      )}
-      style={{ animationDelay: `${delay}ms` }}
-    >
-      {/* Recuadro de la foto (formato retrato). Reemplazá el placeholder
-          cargando la ruta de la imagen en el campo `foto` del socio. */}
-      <div className="relative aspect-[4/5] overflow-hidden rounded-xl bg-papel-hueso">
-        {socio.foto ? (
-          <Image
-            src={socio.foto}
-            alt={socio.nombre}
-            fill
-            sizes="(max-width: 1024px) 80vw, 300px"
-            className="object-cover"
-          />
-        ) : (
-          <div className="flex h-full w-full items-center justify-center">
-            <span className="font-display text-5xl font-bold text-tinta/20">
-              {iniciales(socio.nombre)}
-            </span>
-          </div>
-        )}
-      </div>
-
-      <figcaption className="px-1 pb-1 pt-4">
-        <p className="font-display text-lg font-semibold">{socio.nombre}</p>
-        <p className="mt-0.5 text-xs uppercase tracking-widest text-tinta/50">
-          {socio.rol}
-        </p>
-        {socio.descripcion && (
-          <p className="mt-2 text-sm leading-relaxed text-tinta/60">
-            {socio.descripcion}
-          </p>
-        )}
-      </figcaption>
-    </figure>
-  );
-}
