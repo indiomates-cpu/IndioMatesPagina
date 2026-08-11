@@ -89,7 +89,7 @@ export default function QuienesSomosPage() {
             <div className="relative aspect-[4/5] overflow-hidden rounded-xl bg-papel-hueso">
               <Image
                 src={FOTO_SOCIOS}
-                alt={`${SOCIOS[0].nombre} y ${SOCIOS[1].nombre}, fundadores de Indio Mates`}
+                alt={`${SOCIOS[1].nombre} y ${SOCIOS[0].nombre}, fundadores de Indio Mates`}
                 fill
                 sizes="(max-width: 1024px) 90vw, 480px"
                 className="object-cover"
